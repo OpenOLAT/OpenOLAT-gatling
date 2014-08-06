@@ -24,10 +24,14 @@ import io.gatling.core.session.Expression
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
 
-class OOSimulation extends Simulation {
+/**
+ * This is the scenario used in the pre-launch phase of
+ * OpenOLAT at UIBK in 2014 with 10'000 users within 8
+ * minutes
+ */
+class UIBKSimulation extends Simulation {
 
 	val httpProtocol = http
-		//.baseURL("http://localhost:8081")
 		.baseURL("https://kivik.frentix.com")
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
@@ -35,6 +39,11 @@ class OOSimulation extends Simulation {
 		.connection("keep-alive")
 		.userAgentHeader("Lynx")
 		
+		
+	val wholetime = 480;
+	val numberoframpsteps = 10;
+	val singleramptime = wholetime / numberoframpsteps;
+
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
 		.pause(1)		
@@ -50,6 +59,20 @@ class OOSimulation extends Simulation {
   		.pause(5)
   		.exec(LoginPage.logout)
 
-	setUp(uibkScn.inject(rampUsers(25) over (10 seconds))).protocols(httpProtocol)
+
+	setUp(uibkScn.inject(
+		rampUsers(100) over (singleramptime seconds),
+		rampUsers(300) over (singleramptime seconds),
+		rampUsers(500) over (singleramptime seconds),
+		rampUsers(700) over (singleramptime seconds),
+		rampUsers(900) over (singleramptime seconds),
+		rampUsers(1100) over (singleramptime seconds),
+		rampUsers(1300) over (singleramptime seconds),
+		rampUsers(1500) over (singleramptime seconds),
+		rampUsers(1700) over (singleramptime seconds),
+		rampUsers(1900) over (singleramptime seconds)
+	)).protocols(httpProtocol)
+		
+	
 	
 }

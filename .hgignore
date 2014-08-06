@@ -29,6 +29,9 @@ bin/*
 # hg originals arising from reverts
 *.orig
 
+#gatling
+*.cache
+
 
 # Mac idiosyncrasies
 .DS_Store

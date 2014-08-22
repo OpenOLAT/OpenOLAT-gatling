@@ -47,8 +47,9 @@ class UIBKSimulation extends Simulation {
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
 		.pause(1)		
-		.feed(csv("oo_user_credentials_small.csv"))
+		.feed(csv("oo_user_credentials.csv"))
 		.exec(LoginPage.login)
+		.pause(100 milliseconds)
 
 		.exec(CoursePage.selectCourseAndBack(0, 5))
 		.exec(CoursePage.selectCourseAndBack(1, 5))

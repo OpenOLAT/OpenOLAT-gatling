@@ -21,7 +21,7 @@
 		<encoding>UTF-8</encoding>
 		<scala.tools.version>2.10</scala.tools.version>
 		<scala.version>2.10.4</scala.version>
-		<gatling.version>2.0.0-RC1</gatling.version>
+		<gatling.version>2.0.0-RC2</gatling.version>
 	</properties>
 
 	<dependencies>

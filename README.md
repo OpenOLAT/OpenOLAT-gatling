@@ -1,10 +1,13 @@
 OpenOLAT Gatling Test
 =========================
 
+
+Setup the project
+-----------------
+
 This project is tested with Scala-IDE 3.0.3 and Scala 2.10.4
 
-
-To set-up add this in .project:
+To finish the set-up, add this in .project:
 
 	<buildSpec>
 		<buildCommand>
@@ -27,6 +30,28 @@ To set-up add this in .project:
 Then save and refresh your project Your project > Maven > Update Project...
 
 
+Before launching a test
+-----------------------
+
+You need to adapt your OpenOLAT instance to the Gatling tests. Remove the landing page
+settings and set these settings in your olat.local.properties
+
+history.back.enabled=false
+history.resume.enabled=false
+registration.enableDisclaimer=false
+
+Disable the debug settings
+
+olat.debug=false
+localization.cache=true
+
+Check that this setting "server.legacy.context" is coherent with your setup.
+
+If you start OpenOLAT in Eclipse or an other IDE, don't forget to limit the 
+output in the console as it can kill the performance.
+
+Launch a test
+-------------
 
 To test it out, simply execute the following command:
 
@@ -35,3 +60,17 @@ To test it out, simply execute the following command:
 or simply:
 
     $mvn gatling:execute
+
+
+OS Optimization for Mac
+-----------------------
+Source: gatling.io
+
+sudo sysctl -w kern.maxfilesperproc=300000
+sudo sysctl -w kern.maxfiles=300000
+sudo sysctl -w net.inet.ip.portrange.first=1024
+
+My settings before as backup:
+kern.maxfilesperproc: 10240
+kern.maxfiles: 12288
+net.inet.ip.portrange.first: 49152

@@ -27,8 +27,8 @@ import scala.concurrent.duration._
 class OOSimulation extends Simulation {
 
 	val httpProtocol = http
-		//.baseURL("http://localhost:8081")
-		.baseURL("https://kivik.frentix.com")
+		.baseURL("http://localhost:8081")
+		//.baseURL("https://kivik.frentix.com")
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
@@ -38,7 +38,7 @@ class OOSimulation extends Simulation {
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
 		.pause(1)		
-		.feed(csv("oo_user_credentials_small.csv"))
+		.feed(csv("oo_user_credentials.csv"))
 		.exec(LoginPage.login)
 
 		.exec(CoursePage.selectCourseAndBack(0, 5))
@@ -47,9 +47,9 @@ class OOSimulation extends Simulation {
 		.exec(CoursePage.selectCourseAndBack(3, 5))
 		.exec(CoursePage.selectCourseAndBack(4, 5))
 
-  		.pause(5)
+  		.pause(50)
   		.exec(LoginPage.logout)
 
-	setUp(uibkScn.inject(rampUsers(25) over (10 seconds))).protocols(httpProtocol)
+	setUp(uibkScn.inject(rampUsers(250) over (25 seconds))).protocols(httpProtocol)
 	
 }

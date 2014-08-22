@@ -26,7 +26,7 @@ import io.gatling.http.Predef._
 object CoursePage extends HttpHeaders {
   
 	def selectCourseAndBack(pos:Int, pause:Int) = {
-		exec(selectCourse(pos)).pause(5).exec(myCourses(pos))
+		exec(selectCourse(pos)).pause(pause).exec(myCourses(pos)).pause(pause)
 	}
   
 	def selectCourse(pos:Int) = {

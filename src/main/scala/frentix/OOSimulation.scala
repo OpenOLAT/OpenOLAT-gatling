@@ -50,6 +50,6 @@ class OOSimulation extends Simulation {
   		.pause(50)
   		.exec(LoginPage.logout)
 
-	setUp(uibkScn.inject(rampUsers(250) over (25 seconds))).protocols(httpProtocol)
+	setUp(uibkScn.inject(rampUsers(2000) over (50 seconds))).protocols(httpProtocol)
 	
 }

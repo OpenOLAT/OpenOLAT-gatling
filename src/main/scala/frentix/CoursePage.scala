@@ -20,7 +20,6 @@
 package frentix
 
 import io.gatling.core.Predef._
-import io.gatling.core.session.Expression
 import io.gatling.http.Predef._
 
 object CoursePage extends HttpHeaders {
@@ -55,7 +54,7 @@ object CoursePage extends HttpHeaders {
 					.check(css("""div.o_meta h4.o_title a""","href")
 						.find(pos + 1)
 						.transform(href => FFEvent(href))
-						.dontValidate
+						.optional
 						.saveAs("ffevent_my_courses_" + nextPos)
 				)
 			)

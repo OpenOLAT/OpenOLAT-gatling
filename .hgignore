@@ -41,6 +41,7 @@ bin/*
 .project
 .settings/*
 .idea/*
+*.iml
 
 syntax: regexp
 ^\.classpath$

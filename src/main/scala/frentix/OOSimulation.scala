@@ -20,14 +20,13 @@
 package frentix
 
 import io.gatling.core.Predef._
-import io.gatling.core.session.Expression
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
 
 class OOSimulation extends Simulation {
 
 	val httpProtocol = http
-		.baseURL("http://localhost:8081")
+		.baseURL("http://localhost:8080")
 		//.baseURL("https://kivik.frentix.com")
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
@@ -47,9 +46,9 @@ class OOSimulation extends Simulation {
 		.exec(CoursePage.selectCourseAndBack(3, 5))
 		.exec(CoursePage.selectCourseAndBack(4, 5))
 
-  		.pause(50)
-  		.exec(LoginPage.logout)
+  	.pause(50)
+  	.exec(LoginPage.logout)
 
-	setUp(uibkScn.inject(rampUsers(2000) over (50 seconds))).protocols(httpProtocol)
+	setUp(uibkScn.inject(rampUsers(2) over (50 seconds))).protocols(httpProtocol)
 	
 }

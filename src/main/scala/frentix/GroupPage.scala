@@ -20,7 +20,6 @@
 package frentix
 
 import io.gatling.core.Predef._
-import io.gatling.core.session.Expression
 import io.gatling.http.Predef._
 
 object GroupPage extends HttpHeaders {

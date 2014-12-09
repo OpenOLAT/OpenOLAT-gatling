@@ -20,6 +20,7 @@
 package frentix
 
 import io.gatling.core.Predef._
+import io.gatling.core.session
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
 
@@ -39,16 +40,13 @@ class OOSimulation extends Simulation {
 		.pause(1)		
 		.feed(csv("oo_user_credentials.csv"))
 		.exec(LoginPage.login)
-
-		.exec(CoursePage.selectCourseAndBack(0, 5))
-		.exec(CoursePage.selectCourseAndBack(1, 5))
-		.exec(CoursePage.selectCourseAndBack(2, 5))
-		.exec(CoursePage.selectCourseAndBack(3, 5))
-		.exec(CoursePage.selectCourseAndBack(4, 5))
+		.repeat(5, "n") {
+			exec(CoursePage.selectCourseAndBack(5))
+		}
 
   	.pause(50)
   	.exec(LoginPage.logout)
 
-	setUp(uibkScn.inject(rampUsers(2) over (50 seconds))).protocols(httpProtocol)
+	setUp(uibkScn.inject(rampUsers(10) over (5 seconds))).protocols(httpProtocol)
 	
 }

@@ -46,7 +46,11 @@ object LoginPage extends HttpHeaders {
 		.check(css("""div.o_coursetable"""))
 		.check(css("""li.o_site_repository a""","href").find(0).saveAs("href_mycourses"))
 		.check(css("""li.o_site_groups a""","href").find(0).saveAs("href_mygroups"))
-		.check(css("""div.o_meta h4.o_title a""","href").find(0).transform(href => FFEvent(href)).optional.saveAs("ffevent_my_courses_0"))
+		.check(css("""div.o_meta h4.o_title a""","href")
+			.find(0)
+			.transform(href => FFEvent(href))
+			.optional
+			.saveAs("currentCourse"))
 
 	def logout = http("Logout")
 		.get("${logoutlink}")

@@ -39,9 +39,9 @@ class UIBKSimulation extends Simulation {
 		.userAgentHeader("Lynx")
 		
 		
-	val wholetime = 480;
-	val numberoframpsteps = 10;
-	val singleramptime = wholetime / numberoframpsteps;
+	val wholetime = 480
+	val numberoframpsteps = 10
+	val singleramptime = wholetime / numberoframpsteps
 
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
@@ -49,15 +49,11 @@ class UIBKSimulation extends Simulation {
 		.feed(csv("oo_user_credentials.csv"))
 		.exec(LoginPage.login)
 		.pause(100 milliseconds)
-
-		.exec(CoursePage.selectCourseAndBack(0, 5))
-		.exec(CoursePage.selectCourseAndBack(1, 5))
-		.exec(CoursePage.selectCourseAndBack(2, 5))
-		.exec(CoursePage.selectCourseAndBack(3, 5))
-		.exec(CoursePage.selectCourseAndBack(4, 5))
-
-  		.pause(5)
-  		.exec(LoginPage.logout)
+		.repeat(5, "n") {
+			exec(CoursePage.selectCourseAndBack(5))
+		}
+  	.pause(5)
+  	.exec(LoginPage.logout)
 
 
 	setUp(uibkScn.inject(

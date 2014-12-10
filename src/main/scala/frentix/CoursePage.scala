@@ -20,6 +20,7 @@
 package frentix
 
 import io.gatling.core.Predef._
+import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 
 import scala.collection.mutable
@@ -43,8 +44,12 @@ object CoursePage extends HttpHeaders {
 				)
 		}
 	}
-	
-	def myCourses() = {
+
+	/**
+	 *
+	 * @return
+	 */
+	def myCourses(): ChainBuilder = {
 		doIf(session => session.contains("currentCourse")) {
 			exec(
 				http("myCourses:${n}")

@@ -47,7 +47,7 @@ class UIBKSimulation extends Simulation {
 		.exec(LoginPage.loginScreen)
 		.pause(1)		
 		.feed(csv("oo_user_credentials.csv"))
-		.exec(LoginPage.login)
+		.exec(LoginPage.loginToMyCourses)
 		.pause(100 milliseconds)
 		.repeat(5, "n") {
 			exec(CoursePage.selectCourseAndBack(5))

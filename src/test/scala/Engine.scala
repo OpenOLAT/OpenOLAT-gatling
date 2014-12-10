@@ -10,7 +10,7 @@ object Engine extends App {
 	props.binariesDirectory(IDEPathHelper.mavenBinariesDirectory.toString)
 
 	props.runDescription("N/A") // do not ask for a descr. upon run
-	props.simulationClass("frentix.OOSimulation") // do not ask for a simulation to run upon run
+	props.simulationClass("frentix.QTI12Simulation") // do not ask for a simulation to run upon run
 
 	Gatling.fromMap(props.build)
 }

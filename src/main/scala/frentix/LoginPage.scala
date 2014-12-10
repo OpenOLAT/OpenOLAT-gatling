@@ -21,19 +21,42 @@ package frentix
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.http.request.builder.{HttpRequestWithParamsBuilder, HttpRequestBuilder}
 
 /**
  * Some functions to be exec
  */
 object LoginPage extends HttpHeaders {
-  
-  def loginScreen = http("Login Screen")
+
+	/**
+	 *
+	 * @return The request builder
+	 */
+  def loginScreen: HttpRequestBuilder = http("Login Screen")
 		.get("""/dmz/""")
 		.headers(headers)
 		.check(status.is(200))
 		.check(regex("""o_fiooolat_login_button"""))
-				
-	def login = http("Login")
+
+	/**
+	 * Jump to in OpenOLAT with a REST url ( a business path).
+	 * There isn't any check to the landing point.
+	 *
+	 * @param url The URL where to jump
+	 * @return The request builder
+	 */
+	def restUrl(url:String): HttpRequestBuilder = http("Jump with REST url")
+		.get(url)
+		.headers(headers)
+		.check(status.is(200))
+
+	/**
+	 * Do the login and optionally save the first course
+	 * in the "My courses" list.
+	 *
+	 * @return The request builder
+	 */
+	def loginToMyCourses: HttpRequestWithParamsBuilder = http("Login to my courses")
 		.post("""/dmz/1:1:oolat_login:1:0:ofo_:fid/""")
 		.headers(headers_post)
 		.formParam("""dispatchuri""", """o_fiooolat_login_button""")
@@ -52,7 +75,11 @@ object LoginPage extends HttpHeaders {
 			.optional
 			.saveAs("currentCourse"))
 
-	def logout = http("Logout")
+	/**
+	 * Log out
+	 * @return
+	 */
+	def logout: HttpRequestBuilder = http("Logout")
 		.get("${logoutlink}")
 		.headers(headers)
 		.check(status.is(200))

@@ -22,29 +22,29 @@ package frentix
 object FFEvent {
   def apply(link:String):FFEvent = {
     var cleanedLink = link.replace("javascript:o_ffEvent('", "").replace("')", "")
-    var splittedLink: Array[String] = cleanedLink.split("','");
-    new FFEvent(splittedLink(0), splittedLink(1), splittedLink(2), splittedLink(3), splittedLink(4));
+    var splittedLink: Array[String] = cleanedLink.split("','")
+    new FFEvent(splittedLink(0), splittedLink(1), splittedLink(2), splittedLink(3), splittedLink(4))
   }
 }
 
 class FFEvent(form:String, uri:String, element:String, eventField:String, action:String) {
   
-  private var _formName = form;
+  private var _formName = form
   private var _formId = form.replace("ofo_", "")
-  private var _dispatchUri = uri;
-  private var _elementId = element;
-  private var _eventFieldId = eventField;
-  private var _actionId = action;
+  private var _dispatchUri = uri
+  private var _elementId = element
+  private var _eventFieldId = eventField
+  private var _actionId = action
   
   def formName = _formName
   def formId = _formId
-  def dispatchUri = _dispatchUri;
-  def elementId = _elementId;
-  def eventFieldId = _eventFieldId;
-  def actionId = _actionId;
+  def dispatchUri = _dispatchUri
+  def elementId = _elementId
+  def eventFieldId = _eventFieldId
+  def actionId = _actionId
   
   def url():String = {
-    return "/auth/1%3A1%3A" + formId + "%3A1%3A1%3Aofo_%3Afid/";
+    "/auth/1%3A1%3A" + formId + "%3A1%3A1%3Aofo_%3Afid/"
   }
   
   override def toString() = "o_ffEvent[" + formName + ":" + dispatchUri + ":" +

@@ -8,8 +8,8 @@ class FFEventTest {
     @Test
     def testOK() = {
       
-      var link = "javascript:o_ffEvent('ofo_8000008724','ofo_8000008724_dispatchuri','o_fi8000008781','ofo_8000008724_eventval','2')";
-      var ffEvent = FFEvent(link);
+      var link = "javascript:o_ffEvent('ofo_8000008724','ofo_8000008724_dispatchuri','o_fi8000008781','ofo_8000008724_eventval','2')"
+      var ffEvent = FFEvent(link)
 
       assertNotNull(ffEvent.url)
       assertEquals("ofo_8000008724", ffEvent.formName)

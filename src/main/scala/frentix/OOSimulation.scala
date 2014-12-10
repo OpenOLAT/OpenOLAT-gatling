@@ -20,15 +20,22 @@
 package frentix
 
 import io.gatling.core.Predef._
-import io.gatling.core.session
 import io.gatling.http.Predef._
-import scala.concurrent.duration._
 
+/**
+ * You can start this simulation with the following
+ * command line:<br/>
+ * mvn gatling:execute -Dusers=100 -Dramp=50 -url=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation<br/>
+ *
+ */
 class OOSimulation extends Simulation {
 
+	val numOfUsers = Integer.getInteger("users", 100)
+	val ramp = Integer.getInteger("ramp", 50)
+	val url = System.getProperty("url", "http://localhost:8080")
+
 	val httpProtocol = http
-		.baseURL("http://localhost:8080")
-		//.baseURL("https://kivik.frentix.com")
+		.baseURL(url)
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
@@ -39,14 +46,13 @@ class OOSimulation extends Simulation {
 		.exec(LoginPage.loginScreen)
 		.pause(1)		
 		.feed(csv("oo_user_credentials.csv"))
-		.exec(LoginPage.login)
+		.exec(LoginPage.loginToMyCourses)
 		.repeat(5, "n") {
 			exec(CoursePage.selectCourseAndBack(5))
 		}
-
   	.pause(50)
   	.exec(LoginPage.logout)
 
-	setUp(uibkScn.inject(rampUsers(10) over (5 seconds))).protocols(httpProtocol)
+	setUp(uibkScn.inject(rampUsers(numOfUsers) over (ramp seconds))).protocols(httpProtocol)
 	
 }

@@ -2,8 +2,8 @@ OpenOLAT Gatling Test
 =========================
 
 
-Setup the project
------------------
+Setup the project with Eclipse
+------------------------------
 
 This project is tested with Scala-IDE 3.0.3 and Scala 2.10.4
 
@@ -28,6 +28,11 @@ To finish the set-up, add this in .project:
 	</natures> 
 	
 Then save and refresh your project Your project > Maven > Update Project...
+
+Setup the porject with IDEA
+---------------------------
+
+I use the Plugin for Scala and Scala 2.10.2
 
 
 Before launching a test
@@ -61,9 +66,15 @@ or simply:
 
     $mvn gatling:execute
 
+With all options:
 
-OS Optimization for Mac
------------------------
+    $mvn gatling:execute -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
+
+Where users are the number of users, the ramp is in seconds and the url is... the url of OpenOLAT
+
+
+OS Optimization for Mac (Maverick and not Yosemite)
+---------------------------------------------------
 Source: gatling.io
 
 sudo sysctl -w kern.maxfilesperproc=300000

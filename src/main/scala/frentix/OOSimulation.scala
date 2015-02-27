@@ -25,7 +25,7 @@ import io.gatling.http.Predef._
 /**
  * You can start this simulation with the following
  * command line:<br/>
- * mvn gatling:execute -Dusers=100 -Dramp=50 -url=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation<br/>
+ * mvn gatling:execute -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation<br/>
  *
  */
 class OOSimulation extends Simulation {
@@ -33,6 +33,7 @@ class OOSimulation extends Simulation {
 	val numOfUsers = Integer.getInteger("users", 100)
 	val ramp = Integer.getInteger("ramp", 50)
 	val url = System.getProperty("url", "http://localhost:8080")
+	val thinks = Integer.getInteger("thinks", 5)
 
 	val httpProtocol = http
 		.baseURL(url)
@@ -48,7 +49,7 @@ class OOSimulation extends Simulation {
 		.feed(csv("oo_user_credentials.csv"))
 		.exec(LoginPage.loginToMyCourses)
 		.repeat(5, "n") {
-			exec(CoursePage.selectCourseAndBack(5))
+			exec(CoursePage.selectCourseAndBack(thinks))
 		}
   	.pause(50)
   	.exec(LoginPage.logout)

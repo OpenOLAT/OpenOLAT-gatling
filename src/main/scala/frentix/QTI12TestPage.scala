@@ -174,7 +174,7 @@ object QTI12TestPage extends HttpHeaders {
             .optional
             .saveAs("multipleChoiceValues"))
           //kprim
-          .check(css("""table.o_qti_item_kprim td.o_qti_item_kprim_input input[type=\'radio\']""", "name")
+          .check(css("""table.table.o_qti_item_kprim td.o_qti_item_kprim_input input[type=\'radio\']""", "name")
             .findAll
             .optional
             .saveAs("kprimNames"))
@@ -214,7 +214,6 @@ object QTI12TestPage extends HttpHeaders {
         }
       } else if(session.contains("kprimNames")) {
         val names = session("kprimNames").as[mutable.Buffer[String]]
-        val parameters = collection.mutable.HashMap[String, String]()
         names.foreach(name => {
           if(!parameters.contains(name)) {
             val responseSuffix = if(Random.nextBoolean()) ":correct" else ":wrong"

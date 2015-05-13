@@ -58,6 +58,10 @@ output in the console as it can kill the performance.
 Launch a test
 -------------
 
+Compile the code with your preferred IDE or with the following command:
+
+	$mvn compile
+
 To test it out, simply execute the following command:
 
     $mvn gatling:execute -Dgatling.simulationClass=frentix.OOSimulation

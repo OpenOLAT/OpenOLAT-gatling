@@ -19,12 +19,51 @@
  */
 package frentix
 
+import java.nio.charset.StandardCharsets._
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.gatling.http.response.{Response, StringResponseBody, ResponseWrapper}
+
+import scala.collection.mutable
+
 trait HttpHeaders {
   
 	val headers = Map("""Accept""" -> """*/*""")
 
+	val headers_json = Map("""Accept""" -> """application/json,text/html""")
+
 	val headers_post = Map(
 		"""Content-Type""" -> """application/x-www-form-urlencoded""",
 		"""Origin""" -> """http://localhost""")
+
+	val extractJsonResponse : PartialFunction[io.gatling.http.response.Response,io.gatling.http.response.Response] = {
+		case response : Response if response.isReceived =>
+			new ResponseWrapper(response) {
+				val extractedResponse = new mutable.StringBuilder
+				extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
+				val jsonResponse = (new ObjectMapper).readTree(response.body.string)
+				val cmds = jsonResponse.get("cmds");
+				0 to cmds.size() - 1 foreach { i => {
+					val cmd = cmds.get(i)
+					if(cmd.get("cmd").asInt() == 2) {
+						val cps = cmd.get("cda").get("cps");
+						0 to cps.size() - 1 foreach { j => {
+							val cp = cps.get(j);
+							if (cp != null && cp.has("hfrag")) {
+								val htmlFragment = cp.get("hfrag").asText()
+								if (!htmlFragment.equals("<!-- empty -->")) {
+									extractedResponse.append(htmlFragment)
+								}
+							}
+						}}
+					}
+				}}
+				extractedResponse.append("</body></html>")
+				//println("***********************************************************")
+				//println(extractedResponse.toString())
+				//println("***********************************************************")
+				override def body = StringResponseBody(extractedResponse.toString(), UTF_8)
+			}
+	}
 
 }

@@ -17,7 +17,9 @@
  * frentix GmbH, http://www.frentix.com
  * <p>
  */
-package frentix
+package frentix.event
+
+import scala.collection.immutable
 
 object FFEvent {
   def apply(link:String):FFEvent = {
@@ -45,6 +47,13 @@ class FFEvent(form:String, uri:String, element:String, eventField:String, action
   
   def url():String = {
     "/auth/1%3A1%3A" + formId + "%3A1%3A1%3Aofo_%3Afid/"
+  }
+
+  def formMap() : immutable.Map[String,String] = {
+    val parameters = collection.mutable.HashMap[String, String]()
+    parameters.put("dispatchuri", elementId)
+    parameters.put("dispatchevent", actionId)
+    parameters.toMap[String,String]
   }
   
   override def toString() = "o_ffEvent[" + formName + ":" + dispatchUri + ":" +

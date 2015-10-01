@@ -19,9 +19,10 @@
  */
 package frentix
 
+import frentix.event.FFEvent
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.{HttpRequestWithParamsBuilder, HttpRequestBuilder}
+import io.gatling.http.request.builder.{HttpRequestBuilder}
 
 /**
  * Some functions to be exec
@@ -56,7 +57,7 @@ object LoginPage extends HttpHeaders {
 	 *
 	 * @return The request builder
 	 */
-	def loginToMyCourses: HttpRequestWithParamsBuilder = http("Login to my courses")
+	def loginToMyCourses: HttpRequestBuilder = http("Login to my courses")
 		.post("""/dmz/1:1:oolat_login:1:0:ofo_:fid/""")
 		.headers(headers_post)
 		.formParam("""dispatchuri""", """o_fiooolat_login_button""")

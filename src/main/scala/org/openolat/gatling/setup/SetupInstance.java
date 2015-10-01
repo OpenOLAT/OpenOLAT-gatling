@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class SetupInstance {
 
-	private static final String url = "http://localhost:8081/olat";
+	private static final String url = "http://localhost:8080";
 	private static final String username = "kanu";
 	private static final String password = "kanu01";
 
@@ -39,7 +39,7 @@ public class SetupInstance {
 
 			RestConnectionPool pool = new RestConnectionPool(connections);
 			//start
-			new SetupInstance().setup(largeInstance, pool);
+			new SetupInstance().setup(mediumInstance, pool);
 			System.out.println("The End");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -51,21 +51,21 @@ public class SetupInstance {
 
 		// create or load users
 		ConcurrentMap<String,UserVO> users = new SetupUsers(pool)
-				//.createUsers("zfc", instance.numOfUsers);
-				.loadExistingUsers();
+				.createUsers("zac", instance.numOfUsers);
+				//.loadExistingUsers();
 
 		//create groups
 		ConcurrentMap<String, GroupVO> groups = new SetupBusinessGroups(pool, users.values())
-				//.createBusinessGroups("zgrp-3", instance.numOfGroups,
-				//		instance.averageGroupOwners, instance.averageGroupParticipants);
-				.getGroupNamesOnInstance();
+				.createBusinessGroups("zgrp-3", instance.numOfGroups,
+						instance.averageGroupOwners, instance.averageGroupParticipants);
+				//.getGroupNamesOnInstance();
 
 		//create courses
 		ConcurrentMap<String,CourseVO> courses = new SetupCourses(pool, users.values(), groups.values())
-				//.creatEmptyCourses("zcourse-1", instance.numOfEmptyCourses,
-				//		instance.averageCourseOwners, instance.averageCourseTutors,
-				//		instance.averageCourseParticipants, instance.averageCourseGroups);
-				.getCourseNamesOnInstance();
+				.creatEmptyCourses("zcourse-1", instance.numOfEmptyCourses,
+						instance.averageCourseOwners, instance.averageCourseTutors,
+						instance.averageCourseParticipants, instance.averageCourseGroups);
+				//.getCourseNamesOnInstance();
 
 		//create efficiency statements
 		new SetupEfficiencyStatements(pool, courses.values())

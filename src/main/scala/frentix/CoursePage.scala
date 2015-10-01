@@ -19,11 +19,12 @@
  */
 package frentix
 
+import frentix.event.FFEvent
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 
-import scala.collection.mutable
+import scala.collection.immutable
 
 object CoursePage extends HttpHeaders {
   
@@ -65,7 +66,7 @@ object CoursePage extends HttpHeaders {
 				)
 			)
 			.exec(session => {
-				val courseList = session("currentCourses").as[mutable.Buffer[String]]
+				val courseList = session("currentCourses").as[immutable.Vector[String]]
 				val nextPos = session("n").as[Int]
 				if(nextPos < courseList.length) {
 					session.set("currentCourse", courseList(nextPos))

@@ -11,7 +11,7 @@ class QTI12Simulation extends Simulation {
   val numOfUsers = Integer.getInteger("users", 10)
   val ramp = Integer.getInteger("ramp", 5)
   val url = System.getProperty("url", "http://localhost:8080")
-  val jump = System.getProperty("jump", "/url/RepositoryEntry/2457600/CourseNode/90764634688340")
+  val jump = System.getProperty("jump", "/url/RepositoryEntry/11960321/CourseNode/91571681291143")
   val thinks = Integer.getInteger("thinks", 5)
 
   val httpProtocol = http
@@ -25,7 +25,7 @@ class QTI12Simulation extends Simulation {
   val qtiScn = scenario("Test QTI 1.2")
     .exec(LoginPage.loginScreen)
     .pause(1)
-    .feed(csv("oo_user_credentials.csv"))
+    .feed(csv("oo_user_credentials_small.csv"))
     .exec(LoginPage.restUrl(jump))
     .exec(QTI12TestPage.login)
     .exec(QTI12TestPage.startWithSections).pause(1, thinks)

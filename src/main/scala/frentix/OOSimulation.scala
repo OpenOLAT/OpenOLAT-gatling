@@ -41,7 +41,7 @@ class OOSimulation extends Simulation {
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
 		.connection("keep-alive")
-		.userAgentHeader("Lynx")
+		.userAgentHeader("Mozilla/5.0")
 		
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)

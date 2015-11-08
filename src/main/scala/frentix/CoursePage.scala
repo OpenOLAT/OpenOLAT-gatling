@@ -19,7 +19,7 @@
  */
 package frentix
 
-import frentix.event.FFEvent
+import frentix.event.{XHREvent, FFEvent}
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
@@ -37,9 +37,10 @@ object CoursePage extends HttpHeaders {
 			exec(
 				http("selectCourse:${n}")
 					.post(session => session("currentCourse").as[FFEvent].url())
-					.headers(headers_post)
+					.headers(headers_json)
 					.formParam("""dispatchuri""", session => session("currentCourse").as[FFEvent].elementId)
 					.formParam("""dispatchevent""", session => session("currentCourse").as[FFEvent].actionId)
+					.transformResponse(extractJsonResponse)
 					.check(status.is(200))
 					.check(css("""div.o_repo_details div.o_lead h1,div.o_course_run"""))
 				)
@@ -52,17 +53,28 @@ object CoursePage extends HttpHeaders {
 	 */
 	def myCourses(): ChainBuilder = {
 		doIf(session => session.contains("currentCourse")) {
-			exec(
+			exec(session => {
+				val myCoursesUrl = session("href_mycourses").as[XHREvent].url()
+				println(myCoursesUrl)
+				session.set("myCoursesUrl", myCoursesUrl)
+			})
+			.exec(
 				http("myCourses:${n}")
-					.get("${href_mycourses}")
-					.headers(headers_post)
+					.post("""${myCoursesUrl}""")
+					.formParam("cid","t")
+					.headers(headers_json)
 					.check(status.is(200))
+					.transformResponse(extractJsonResponse)
 					.check(css("""div.o_coursetable"""))
 					.check(css("""div.o_meta h4.o_title a""","href")
 						.findAll
 						.transform(_.map(href => FFEvent(href)))
 						.optional
-						.saveAs("currentCourses")
+						.saveAs("currentCourses"))
+					.check(css("""li.o_site_repository a""","onclick")
+						.find(0)
+						.transform(onclick => XHREvent(onclick))
+						.saveAs("href_mycourses")
 				)
 			)
 			.exec(session => {

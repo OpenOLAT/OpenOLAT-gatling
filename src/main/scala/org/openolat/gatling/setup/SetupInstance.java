@@ -19,9 +19,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class SetupInstance {
 
-	private static final String url = "http://localhost:8080";
-	private static final String username = "kanu";
-	private static final String password = "kanu01";
+	private static final String url = "http://localhost:8081/olat";
 
 	public static final File avatars = new File("/Users/srosse/Pictures/Avatars");
 
@@ -39,7 +37,7 @@ public class SetupInstance {
 
 			RestConnectionPool pool = new RestConnectionPool(connections);
 			//start
-			new SetupInstance().setup(mediumInstance, pool);
+			new SetupInstance().setup(extraLargeInstance, pool);
 			System.out.println("The End");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,10 +116,10 @@ public class SetupInstance {
 		largeInstance.averageCatalogChildCourses = 50;
 		largeInstance.averageCatalogChildNodes = 20;
 
-		extraLargeInstance.numOfUsers = 15000;
-		extraLargeInstance.numOfGroups = 10000;
+		extraLargeInstance.numOfUsers = 30000;
+		extraLargeInstance.numOfGroups = 15000;
 		extraLargeInstance.averageGroupOwners = 10;
-		extraLargeInstance.averageGroupParticipants = 100;
+		extraLargeInstance.averageGroupParticipants = 50;
 		extraLargeInstance.numOfEmptyCourses = 10000;
 		extraLargeInstance.averageCourseOwners = 10;
 		extraLargeInstance.averageCourseTutors = 10;

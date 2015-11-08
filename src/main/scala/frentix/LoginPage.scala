@@ -19,10 +19,10 @@
  */
 package frentix
 
-import frentix.event.FFEvent
+import frentix.event.{XHREvent, FFEvent}
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.{HttpRequestBuilder}
+import io.gatling.http.request.builder.HttpRequestBuilder
 
 /**
  * Some functions to be exec
@@ -38,18 +38,6 @@ object LoginPage extends HttpHeaders {
 		.headers(headers)
 		.check(status.is(200))
 		.check(regex("""o_fiooolat_login_button"""))
-
-	/**
-	 * Jump to in OpenOLAT with a REST url ( a business path).
-	 * There isn't any check to the landing point.
-	 *
-	 * @param url The URL where to jump
-	 * @return The request builder
-	 */
-	def restUrl(url:String): HttpRequestBuilder = http("Jump with REST url")
-		.get(url)
-		.headers(headers)
-		.check(status.is(200))
 
 	/**
 	 * Do the login and optionally save the first course
@@ -68,13 +56,31 @@ object LoginPage extends HttpHeaders {
 		.check(css(".o_logout", "href").saveAs("logoutlink"))
 		//check my courses is loaded
 		.check(css("""div.o_coursetable"""))
-		.check(css("""li.o_site_repository a""","href").find(0).saveAs("href_mycourses"))
-		.check(css("""li.o_site_groups a""","href").find(0).saveAs("href_mygroups"))
+		.check(css("""li.o_site_repository a""","onclick")
+			.find(0)
+			.transform(onclick => XHREvent(onclick))
+			.saveAs("href_mycourses"))
+		.check(css("""li.o_site_groups a""","onclick")
+			.find(0)
+			.transform(onclick => XHREvent(onclick))
+			.saveAs("href_mygroups"))
 		.check(css("""div.o_meta h4.o_title a""","href")
 			.find(0)
 			.transform(href => FFEvent(href))
 			.optional
 			.saveAs("currentCourse"))
+
+	/**
+	 * Jump to in OpenOLAT with a REST url ( a business path).
+	 * There isn't any check to the landing point.
+	 *
+	 * @param url The URL where to jump
+	 * @return The request builder
+	 */
+	def restUrl(url:String): HttpRequestBuilder = http("Jump with REST url")
+		.get(url)
+		.headers(headers)
+		.check(status.is(200))
 
 	/**
 	 * Log out

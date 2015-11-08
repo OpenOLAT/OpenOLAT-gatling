@@ -73,6 +73,8 @@ or simply:
 With all options:
 
     $mvn gatling:execute -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
+    
+    $mvn gatling:execute -Dusers=500 -Dthinks=10 -Dramp=50 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
 
 Where users are the number of users, the ramp is in seconds and the url is... the url of OpenOLAT
 

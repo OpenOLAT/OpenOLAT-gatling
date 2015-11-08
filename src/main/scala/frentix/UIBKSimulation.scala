@@ -36,7 +36,7 @@ class UIBKSimulation extends Simulation {
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
 		.connection("keep-alive")
-		.userAgentHeader("Lynx")
+		.userAgentHeader("Mozilla/5.0")
 		
 		
 	val wholetime = 480

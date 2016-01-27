@@ -19,15 +19,89 @@
  */
 package frentix
 
-import io.gatling.core.Predef._
-import io.gatling.http.Predef._
+import frentix.event.FFXHREvent
+import frentix.event.XHREvent
+import io.gatling.core.Predef.checkBuilder2Check
+import io.gatling.core.Predef.doIf
+import io.gatling.core.Predef.exec
+import io.gatling.core.Predef.findCheckBuilder2Check
+import io.gatling.core.Predef.findCheckBuilder2ValidatorCheckBuilder
+import io.gatling.core.Predef.intToFiniteDuration
+import io.gatling.core.Predef.stringToExpression
+import io.gatling.core.Predef.validatorCheckBuilder2CheckBuilder
+import io.gatling.core.Predef.value2Expression
+import io.gatling.core.Predef.value2Success
+import io.gatling.core.structure.ChainBuilder
+import io.gatling.http.Predef.css
+import io.gatling.http.Predef.http
+import io.gatling.http.Predef.status
+import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
+
+import scala.collection.immutable
 
 object GroupPage extends HttpHeaders {
+	
+	def myGroupsAndSelectCourse(pause:Int) = {
+		exec(myGroups()).pause(pause).exec(selectGroup()).pause(pause)
+	}
   
-	def groups = http("mygroups:0")
-			.get("${href_mygroups}")
-			.headers(headers_post)
-			.check(status.is(200))
-			.check(css("""div.o_rendertype_classic"""))
+	def myGroups(): ChainBuilder = {
+		doIf(session => session.contains("href_mygroups")) {
+  		exec(session => {
+  			val myGroupsUrl = session("href_mygroups").as[XHREvent].url()
+  			session.set("myGroupsUrl", myGroupsUrl)
+  		})
+  		.exec(
+  		  http("mygroups:${n}")
+  			  .post("""${myGroupsUrl}""")
+  			  .headers(headers_json)
+  			  .formParam("cid","t")
+  			  .check(status.is(200))
+  			  .transformResponse(extractJsonResponse)
+  			  .check(css("""div.o_group_list"""))
+  			  .check(css("""div.o_group_list td.o_dnd_label a""","href")
+						.findAll
+						.transform(_.map(href => FFXHREvent(href)))
+						.optional
+						.saveAs("currentGroups"))
+					.check(css("""div#o_main_center_content_inner form""","action")
+            .find
+            .saveAs("myGroupsAction"))
+					.check(css("""li.o_site_groups a""","onclick")
+						.find(0)
+						.transform(onclick => XHREvent(onclick))
+						.saveAs("href_mygroups")))
+		}
+	}
+	
+	def selectGroup(): ChainBuilder = {
+		exec(session => {
+		  val groupList = session("currentGroups").as[immutable.Vector[String]]
+			val nextPos = session("n").as[Int]
+			if(nextPos < groupList.length) {
+				session.set("currentGroup", groupList(nextPos))
+			} else {
+				session.remove("currentGroup")
+			}
+		})
+		.doIf(session => session.contains("currentGroup")) {
+			exec(session => {
+				val currentGroupLink = session("currentGroup").as[FFXHREvent]
+				val parameters = currentGroupLink.formMap();
+				session.set("formParameters", parameters)
+			})
+			.exec(
+				http("selectGroup:${n}")
+					.post("""${myGroupsAction}""")
+          .formParamMap("""${formParameters}""")
+					.headers(headers_json)
+					.transformResponse(extractJsonResponse)
+					.check(status.is(200))
+					.check(css("""h2 i.o_icon.o_icon_group"""))
+				)
+		}
+			
+			
+	}
 
 }

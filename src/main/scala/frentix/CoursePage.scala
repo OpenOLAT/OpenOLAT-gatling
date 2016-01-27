@@ -55,7 +55,6 @@ object CoursePage extends HttpHeaders {
 		doIf(session => session.contains("currentCourse")) {
 			exec(session => {
 				val myCoursesUrl = session("href_mycourses").as[XHREvent].url()
-				println(myCoursesUrl)
 				session.set("myCoursesUrl", myCoursesUrl)
 			})
 			.exec(

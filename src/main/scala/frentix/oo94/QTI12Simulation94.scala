@@ -9,8 +9,8 @@ import frentix.LoginPage
  */
 class QTI12Simulation94 extends Simulation {
 
-  val numOfUsers = Integer.getInteger("users", 1)
-  val ramp = Integer.getInteger("ramp", 5)
+  val numOfUsers = Integer.getInteger("users", 500)
+  val ramp = Integer.getInteger("ramp", 50)
   val url = System.getProperty("url", "http://localhost:8080")
   val jump = System.getProperty("jump", "/url/RepositoryEntry/4390912/CourseNode/91506544713400")
   val thinks = Integer.getInteger("thinks", 5)
@@ -26,7 +26,7 @@ class QTI12Simulation94 extends Simulation {
   val qtiScn = scenario("Test QTI 1.2")
     .exec(LoginPage.loginScreen)
     .pause(1)
-    .feed(csv("oo_user_credentials_small.csv"))
+    .feed(csv("oo94_user_credentials.csv"))
     .exec(LoginPage.restUrl(jump))
     .exec(QTI12TestPage94.login)
     .exec(QTI12TestPage94.startWithSections).pause(1, thinks)

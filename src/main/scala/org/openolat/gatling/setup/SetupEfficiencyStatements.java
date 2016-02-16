@@ -57,7 +57,6 @@ public class SetupEfficiencyStatements {
 			statementBuilder = new StatementsUriBuilder(connection);
 
 			try {
-				CourseUriBuilder courseBuilder = new CourseUriBuilder(connection);
 				OlatResourceVO resource = courseBuilder.getOlatResource(course);
 				createStatements(course, resource);
 			} catch(Exception e) {
@@ -89,13 +88,13 @@ public class SetupEfficiencyStatements {
 			}
 		}
 
-		private boolean getRandom(Random rnd, double average) {
-			double point = Math.abs(rnd.nextGaussian());
+		private boolean getRandom(Random rand, double average) {
+			double point = Math.abs(rand.nextGaussian());
 			return point < average;
 		}
 
-		private long getRandom(Random rnd, int average) {
-			double numOfParticipantsD = Math.abs(rnd.nextGaussian() * average);
+		private long getRandom(Random rand, int average) {
+			double numOfParticipantsD = Math.abs(rand.nextGaussian() * average);
 			return Math.round(numOfParticipantsD);
 		}
 

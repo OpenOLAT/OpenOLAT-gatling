@@ -9,10 +9,10 @@ import io.gatling.http.Predef._
 class QTI21Simulation extends Simulation {
 
   val numOfUsers = Integer.getInteger("users", 490)
-  val ramp = Integer.getInteger("ramp", 25)
+  val ramp = Integer.getInteger("ramp", 50)
   val url = System.getProperty("url", "http://localhost:8081")
   val jump = System.getProperty("jump", "/url/RepositoryEntry/35061760/CourseNode/92385798289062")
-  val thinks = Integer.getInteger("thinks", 5)
+  val thinks = Integer.getInteger("thinks", 45)
 
   val httpProtocol = http
     .baseURL(url)

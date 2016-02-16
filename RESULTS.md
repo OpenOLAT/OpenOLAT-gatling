@@ -32,3 +32,6 @@ The test is the UIBK like test as above:
    
 2015-11-18: Standard configuration for OpenOLAT (chat, rating, comments), UIBK like
    - Version: 10.4b, 278 queries/s, some errors due to users without courses, 99% < 11s
+   
+2016-02-01: Standard configuration for OpenOLAT (chat, rating, comments), UIBK like
+   - Version: 10.5++, 388 queries/s, some errors due to users without courses, 99% < 8.1s

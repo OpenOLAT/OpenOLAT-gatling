@@ -48,10 +48,13 @@ class OOSimulation extends Simulation {
 		.pause(1)		
 		.feed(csv("oo_user_credentials_big.csv"))
 		.exec(LoginPage.loginToMyCourses)
+		/*.repeat(5, "n") {
+		  exec(GroupPage.myGroupsAndSelectCourse(thinks))
+	  }*/
 		.repeat(5, "n") {
 			exec(CoursePage.selectCourseAndBack(thinks))
 		}
-  	.pause(50)
+  	.pause(5)
   	.exec(LoginPage.logout)
 
 	setUp(uibkScn.inject(rampUsers(numOfUsers) over (ramp seconds))).protocols(httpProtocol)

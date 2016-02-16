@@ -37,7 +37,7 @@ public class SetupInstance {
 
 			RestConnectionPool pool = new RestConnectionPool(connections);
 			//start
-			new SetupInstance().setup(extraLargeInstance, pool);
+			new SetupInstance().setup(smallInstance, pool);
 			System.out.println("The End");
 		} catch (Exception e) {
 			e.printStackTrace();

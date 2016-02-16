@@ -142,9 +142,9 @@ public class SetupCourses {
 			}
 		}
 
-		private void addGroups(CourseVO course, int averageGroups)
+		private void addGroups(CourseVO course, int avgGroups)
 				throws URISyntaxException, IOException {
-			long numOfGroups = getRandomNumOfUsers(rnd, averageGroups, groups);
+			long numOfGroups = getRandomNumOfUsers(rnd, avgGroups, groups);
 			for(int j=0; j<numOfGroups; j++) {
 				GroupVO group = getRandomUser(rnd, groups);
 				if(group != null) {
@@ -153,19 +153,19 @@ public class SetupCourses {
 			}
 		}
 
-		private void addMembership(CourseVO course, int averagAuthors, int averageCoach, int averageParticipant)
+		private void addMembership(CourseVO course, int averagAuthors, int avgCoach, int avgParticipants)
 				throws IOException, URISyntaxException {
 			long numOfAuthors = getRandomNumOfUsers(rnd, averagAuthors, users);
 			for(int j=0; j<numOfAuthors; j++) {
 				addMembership(course, Roles.author);
 			}
 
-			long numOfTutors = getRandomNumOfUsers(rnd, averageCoach, users);
+			long numOfTutors = getRandomNumOfUsers(rnd, avgCoach, users);
 			for(int j=0; j<numOfTutors; j++) {
 				addMembership(course, Roles.tutor);
 			}
 
-			long numOfParticipants = getRandomNumOfUsers(rnd, averageParticipant, users);
+			long numOfParticipants = getRandomNumOfUsers(rnd, avgParticipants, users);
 			for(int j=0; j<numOfParticipants; j++) {
 				addMembership(course, Roles.participant);
 			}
@@ -183,13 +183,13 @@ public class SetupCourses {
 			}
 		}
 
-		public long getRandomNumOfUsers(Random rnd, int average, List<?> choices) {
-			double numOfParticipantsD = Math.abs(rnd.nextGaussian() * average);
+		public long getRandomNumOfUsers(Random rand, int average, List<?> choices) {
+			double numOfParticipantsD = Math.abs(rand.nextGaussian() * average);
 			return Math.min(choices.size(), (long)numOfParticipantsD);
 		}
 
-		public <U> U getRandomUser(Random rnd, List<U> names) {
-			double randomPosition = rnd.nextDouble() * names.size();
+		public <U> U getRandomUser(Random rand, List<U> names) {
+			double randomPosition = rand.nextDouble() * names.size();
 			long first = Math.min(Math.round(randomPosition), names.size() - 1);
 			return names.get((int)first);
 		}

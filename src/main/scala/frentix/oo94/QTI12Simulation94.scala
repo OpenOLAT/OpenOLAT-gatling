@@ -29,6 +29,7 @@ class QTI12Simulation94 extends Simulation {
     .feed(csv("oo94_user_credentials.csv"))
     .exec(LoginPage.restUrl(jump))
     .exec(QTI12TestPage94.login)
+    .rendezVous(numOfUsers)
     .exec(QTI12TestPage94.startWithSections).pause(1, thinks)
     .repeat("${numOfSections}", "sectionPos") {
       exec(QTI12TestPage94.startSection)

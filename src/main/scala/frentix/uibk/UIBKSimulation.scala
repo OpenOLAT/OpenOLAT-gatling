@@ -17,11 +17,15 @@
  * frentix GmbH, http://www.frentix.com
  * <p>
  */
-package frentix
+package frentix.uibk
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
+import frentix.CoursePage
+import frentix.LoginPage
+import io.gatling.http.config.HttpProtocolBuilder.toHttpProtocol
+import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
 /**
  * This is the scenario used in the pre-launch phase of

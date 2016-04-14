@@ -12,6 +12,7 @@ object Engine extends App {
 	props.runDescription("OO simulation") // do not ask for a descr. upon run
 	//props.simulationClass("frentix.uibk.UIBKSTSimulation")
   //props.simulationClass("frentix.QTI12Simulation")
+	//props.simulationClass("frentix.QTI21Simulation")
   props.simulationClass("frentix.OOSimulation")
 
 	Gatling.fromMap(props.build)

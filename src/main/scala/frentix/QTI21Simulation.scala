@@ -8,11 +8,13 @@ import io.gatling.http.Predef._
  */
 class QTI21Simulation extends Simulation {
 
-  val numOfUsers = Integer.getInteger("users", 490)
+  val numOfUsers = Integer.getInteger("users", 100)
+  val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
   val ramp = Integer.getInteger("ramp", 50)
   val url = System.getProperty("url", "http://localhost:8081")
-  val jump = System.getProperty("jump", "/url/RepositoryEntry/35061760/CourseNode/92385798289062")
-  val thinks = Integer.getInteger("thinks", 45)
+  val jump = System.getProperty("jump", "/url/RepositoryEntry/35061760/CourseNode/93165245434558")
+  val thinks = Integer.getInteger("thinks", 5)
+  val thinksToRendezVous = (thinks.toInt * 2)
 
   val httpProtocol = http
     .baseURL(url)
@@ -28,6 +30,8 @@ class QTI21Simulation extends Simulation {
     .feed(csv("oo_user_credentials.csv"))
     .exec(LoginPage.restUrl(jump))
     .exec(QTI21TestPage.login)
+    .rendezVous(numOfUsersToRendezVous)
+		.pause(1, thinksToRendezVous)
     .exec(QTI21TestPage.startTest)
     .exec(QTI21TestPage.startWithItems).pause(1, thinks)
     .repeat("${numOfItems}", "itemPos") {

@@ -25,11 +25,30 @@ import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
 
 import scala.collection.immutable
+import io.gatling.http.check.HttpCheck
 
 object CoursePage extends HttpHeaders {
+	
+  /**
+	 * List of checks: find the next button and optionally save it as
+	 * "nextElement" in session.
+	 */
+	val nextCourseElementCheckList: Seq[HttpCheck] = Seq(css("""a[onclick*='nextelement']""","onclick")
+							.find
+							.transform(onclick => XHREvent(onclick))
+							.optional
+						  .saveAs("nextElement"))
   
 	def selectCourseAndBack(pause:Int) = {
 		exec(selectCourse()).pause(pause).exec(myCourses()).pause(pause)
+	}
+	
+	def selectCourseNavigateAndBack(pause:Int, pauseElement:Int) = {
+		exec(selectCourse()).pause(pause)
+		  .exec(asLongAs(session => session.contains("nextElement")) {
+			   exec(nextCourseElement()).pause(pauseElement)
+		  })
+		  .exec(myCourses()).pause(pause)
 	}
   
 	def selectCourse() = {
@@ -43,7 +62,26 @@ object CoursePage extends HttpHeaders {
 					.transformResponse(extractJsonResponse)
 					.check(status.is(200))
 					.check(css("""div.o_repo_details div.o_lead h1,div.o_course_run"""))
+					.check(nextCourseElementCheckList: _*)
 				)
+		}
+	}
+	
+	def nextCourseElement() = {
+		doIf(session => session.contains("nextElement")) {
+			exec(session => {
+				val nextElementUrl = session("nextElement").as[XHREvent].url()
+				session.remove("nextElement").set("nextElementUrl", nextElementUrl)
+			})
+			.exec(
+				http("nextCourseElement:selectCourse:${n}")
+				  .post("""${nextElementUrl}""")
+				  .formParam("cid","nextelement")
+					.headers(headers_json)
+					.check(status.is(200))
+					.transformResponse(extractJsonResponse)
+					.check(nextCourseElementCheckList: _*)
+			)
 		}
 	}
 

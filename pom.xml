@@ -23,6 +23,7 @@
 		<scala.version>2.11.7</scala.version>
 		<gatling.version>2.1.7</gatling.version>
 		<gatling.plugin.version>2.1.7</gatling.plugin.version>
+		<downloadSources>true</downloadSources>
 	</properties>
 
 	<dependencies>

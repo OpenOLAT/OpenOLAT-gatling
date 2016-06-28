@@ -20,9 +20,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<encoding>UTF-8</encoding>
 		<scala.tools.version>2.11</scala.tools.version>
-		<scala.version>2.11.7</scala.version>
-		<gatling.version>2.1.7</gatling.version>
-		<gatling.plugin.version>2.1.7</gatling.plugin.version>
+		<scala.version>2.11.8</scala.version>
+		<gatling.version>2.2.2</gatling.version>
+		<gatling.plugin.version>2.2.0</gatling.plugin.version>
 		<downloadSources>true</downloadSources>
 	</properties>
 
@@ -46,18 +46,11 @@
 			<version>4.11</version>
 			<scope>test</scope>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.specs2</groupId>
-			<artifactId>specs2_${scala.tools.version}</artifactId>
-			<version>3.3.1</version>
-			<scope>test</scope>
-		</dependency>
-		-->
+
 		<dependency>
 			<groupId>org.scalatest</groupId>
 			<artifactId>scalatest_${scala.tools.version}</artifactId>
-			<version>3.0.0-M9</version>
+			<version>3.0.0-RC3</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -109,10 +102,12 @@
 				<version>3.2.2</version>
 				<executions>
 					<execution>
+						<!-- 
 						<goals>
 							<goal>compile</goal>
 							<goal>testCompile</goal>
 						</goals>
+						-->
 						<configuration>
 							<args>
 								<arg>-dependencyfile</arg>

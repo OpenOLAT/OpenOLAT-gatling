@@ -22,7 +22,6 @@ package frentix.uibk
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
-import io.gatling.http.config.HttpProtocolBuilder.toHttpProtocol
 import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
 /**
@@ -38,7 +37,7 @@ class UIBKSTSimulation extends Simulation {
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
-		.connection("keep-alive")
+		.connectionHeader("keep-alive")
 		.userAgentHeader("Lynx")
 		
 	val headers = Map("""Accept""" -> """*/*""")

@@ -19,22 +19,10 @@
  */
 package frentix
 
-import frentix.event.FFXHREvent
-import frentix.event.XHREvent
-import io.gatling.core.Predef.checkBuilder2Check
-import io.gatling.core.Predef.doIf
-import io.gatling.core.Predef.exec
-import io.gatling.core.Predef.findCheckBuilder2Check
-import io.gatling.core.Predef.findCheckBuilder2ValidatorCheckBuilder
-import io.gatling.core.Predef.intToFiniteDuration
-import io.gatling.core.Predef.stringToExpression
-import io.gatling.core.Predef.validatorCheckBuilder2CheckBuilder
-import io.gatling.core.Predef.value2Expression
-import io.gatling.core.Predef.value2Success
+import frentix.event.{FFXHREvent, XHREvent}
+import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
-import io.gatling.http.Predef.css
-import io.gatling.http.Predef.http
-import io.gatling.http.Predef.status
+import io.gatling.http.Predef._
 import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
 import scala.collection.immutable
@@ -56,8 +44,8 @@ object GroupPage extends HttpHeaders {
   			  .post("""${myGroupsUrl}""")
   			  .headers(headers_json)
   			  .formParam("cid","t")
-  			  .check(status.is(200))
   			  .transformResponse(extractJsonResponse)
+  			  .check(status.is(200))
   			  .check(css("""div.o_group_list"""))
   			  .check(css("""div.o_group_list td.o_dnd_label a""","href")
 						.findAll

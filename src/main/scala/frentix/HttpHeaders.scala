@@ -41,7 +41,7 @@ trait HttpHeaders {
 			new ResponseWrapper(response) {
 				val extractedResponse = new mutable.StringBuilder
 				extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
-				val jsonResponse = (new ObjectMapper).readTree(response.body.string)
+				val jsonResponse = (new ObjectMapper()).readTree(response.body.string)
 				val cmds = jsonResponse.get("cmds");
 				0 to cmds.size() - 1 foreach { i => {
 					val cmd = cmds.get(i)
@@ -62,7 +62,7 @@ trait HttpHeaders {
 				//println("***********************************************************")
 				//println(extractedResponse.toString())
 				//println("***********************************************************")
-				override def body = StringResponseBody(extractedResponse.toString(), UTF_8)
+				override def body = new StringResponseBody(extractedResponse.toString(), UTF_8)
 			}
 	}
 

@@ -57,12 +57,12 @@ object QTI21TestPage extends HttpHeaders {
     .transformResponse(extractJsonResponse)
     .check(status.is(200))
     .check(css("#o_qti_run"))
-    .check(css("""div#o_qti_menu li.assessmentItem button""","onclick")
+    .check(css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
       .findAll
       .transform(_.map(onclick => FFXHREvent(onclick)))
       .optional
       .saveAs("qtiItems"))
-    .check(css("""div#o_qti_menu li.assessmentItem button""","onclick")
+    .check(css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
       .count
       .saveAs("numOfItems"))
     .check(css("""div#o_main_center_content_inner form""","action")
@@ -85,7 +85,7 @@ object QTI21TestPage extends HttpHeaders {
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
-        .check(css("""div#o_qti_run button.o_sel_end_testpart""","onclick")
+        .check(css("""div#o_qti_run a.o_sel_end_testpart""","onclick")
           .find
           .transform(onclick => FFXHREvent(onclick))
           .saveAs("closeTest")))
@@ -144,7 +144,7 @@ object QTI21TestPage extends HttpHeaders {
           .headers(headers_json)
           .transformResponse(extractJsonResponse)
           .check(status.is(200))
-          .check(css("""div.qtiworks.assessmentItem.assessmentTest"""))
+          .check(css("""div.qtiworks.o_assessmentitem.o_assessmenttest"""))
           .check(css("""div#itemBody input[type=\'hidden\'][name^=\'qtiworks_presented_\']""", "name")
             .find(0)
             .saveAs("formPresentedHidden"))
@@ -260,15 +260,15 @@ object QTI21TestPage extends HttpHeaders {
       .check(status.is(200))
       .transformResponse(extractJsonResponse)
       .check(css("#o_qti_run"))
-      .check(css("""div#o_qti_menu li.assessmentItem button""","onclick")
+      .check(css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
         .findAll
         .transform(_.map(onclick => FFXHREvent(onclick)))
         .optional
         .saveAs("qtiItems"))
-      .check(css("""div#o_qti_menu li.assessmentItem button""","onclick")
+      .check(css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
         .count
         .saveAs("numOfItems"))
-      .check(css("""button.o_sel_end_testpart""", "onclick")
+      .check(css("""a.o_sel_end_testpart""", "onclick")
         .find
         .transform(onclick => FFXHREvent(onclick))
         .saveAs("endTestPartButton")

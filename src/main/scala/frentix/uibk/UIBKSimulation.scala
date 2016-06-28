@@ -24,7 +24,6 @@ import io.gatling.http.Predef._
 import scala.concurrent.duration._
 import frentix.CoursePage
 import frentix.LoginPage
-import io.gatling.http.config.HttpProtocolBuilder.toHttpProtocol
 import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
 /**
@@ -39,7 +38,7 @@ class UIBKSimulation extends Simulation {
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
-		.connection("keep-alive")
+		.connectionHeader("keep-alive")
 		.userAgentHeader("Mozilla/5.0")
 		
 		

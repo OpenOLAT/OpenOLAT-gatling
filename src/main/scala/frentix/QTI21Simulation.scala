@@ -12,7 +12,7 @@ class QTI21Simulation extends Simulation {
   val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
   val ramp = Integer.getInteger("ramp", 50)
   val url = System.getProperty("url", "http://localhost:8081")
-  val jump = System.getProperty("jump", "/url/RepositoryEntry/35061760/CourseNode/93165245434558")
+  val jump = System.getProperty("jump", "/url/RepositoryEntry/35061760/CourseNode/92385798289062")
   val thinks = Integer.getInteger("thinks", 5)
   val thinksToRendezVous = (thinks.toInt * 2)
 
@@ -21,7 +21,7 @@ class QTI21Simulation extends Simulation {
     .acceptHeader("text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .acceptEncodingHeader("gzip, deflate")
     .acceptLanguageHeader("de-de")
-    .connection("keep-alive")
+    .connectionHeader("keep-alive")
     .userAgentHeader("Mozilla/5.0")
 
   val qtiScn = scenario("Test QTI 2.1")
@@ -30,7 +30,7 @@ class QTI21Simulation extends Simulation {
     .feed(csv("oo_user_credentials.csv"))
     .exec(LoginPage.restUrl(jump))
     .exec(QTI21TestPage.login)
-    .rendezVous(numOfUsersToRendezVous)
+    //.rendezVous(numOfUsersToRendezVous)
 		.pause(1, thinksToRendezVous)
     .exec(QTI21TestPage.startTest)
     .exec(QTI21TestPage.startWithItems).pause(1, thinks)

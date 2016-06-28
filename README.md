@@ -5,7 +5,7 @@ OpenOLAT Gatling Test
 Setup the project with Eclipse
 ------------------------------
 
-This project is tested with Scala-IDE 3.0.3 and Scala 2.10.4
+This project is tested with Scala-IDE 4.4.1 and Scala 2.11.8
 
 To finish the set-up, add this in .project:
 
@@ -29,10 +29,10 @@ To finish the set-up, add this in .project:
 	
 Then save and refresh your project Your project > Maven > Update Project...
 
-Setup the porject with IDEA
+Setup the project with IDEA
 ---------------------------
 
-I use the Plugin for Scala and Scala 2.10.2
+I use the Plugin for Scala and Scala 2.11.8
 
 
 Before launching a test
@@ -50,7 +50,7 @@ Disable the debug settings
 olat.debug=false
 localization.cache=true
 
-Check that this setting "server.legacy.context" is coherent with your setup.
+Check that the setting "server.legacy.context" is coherent with your setup.
 
 If you start OpenOLAT in Eclipse or an other IDE, don't forget to limit the 
 output in the console as it can kill the performance.

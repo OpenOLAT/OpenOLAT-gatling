@@ -20,7 +20,7 @@ class QTI12Simulation94 extends Simulation {
     .acceptHeader("text/html")
     .acceptEncodingHeader("gzip, deflate")
     .acceptLanguageHeader("de-de")
-    .connection("keep-alive")
+    .connectionHeader("keep-alive")
     .userAgentHeader("Lynx")
 
   val qtiScn = scenario("Test QTI 1.2")

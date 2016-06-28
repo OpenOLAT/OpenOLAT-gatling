@@ -40,19 +40,20 @@ class OOSimulation extends Simulation {
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
-		.connection("keep-alive")
+		.connectionHeader("keep-alive")
 		.userAgentHeader("Mozilla/5.0")
 		
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
 		.pause(1)		
-		.feed(csv("oo_user_credential.csv"))
+		.feed(csv("oo_user_credentials_big.csv"))
 		.exec(LoginPage.loginToMyCourses)
 		/*.repeat(5, "n") {
 		  exec(GroupPage.myGroupsAndSelectCourse(thinks))
 	  }*/
 		.repeat(5, "n") {
 			exec(CoursePage.selectCourseNavigateAndBack(thinks, thinks))
+			//exec(CoursePage.selectCourseAndBack(thinks))
 		}
   	.pause(5)
   	.exec(LoginPage.logout)

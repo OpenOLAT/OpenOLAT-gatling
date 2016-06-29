@@ -14,12 +14,73 @@ import scala.collection.immutable
 import scala.util.Random
 
 import java.nio.charset.StandardCharsets.UTF_8
+import io.gatling.http.check.HttpCheck
 
 
 /**
  * Created by srosse on 09.12.14.
  */
 object QTI21TestPage extends HttpHeaders {
+	
+	/**
+	 * List of checks: find the next button and optionally save it as
+	 * "nextElement" in session.
+	 */
+	val checkListAssessmentItemForm: Seq[HttpCheck] = Seq(
+			css("""div#itemBody input[type=\'hidden\'][name^=\'qtiworks_presented_\']""", "name")
+            .find(0)
+            .saveAs("formPresentedHidden"),
+      css("""div.qtiworks.o_assessmentitem.o_assessmenttest button.btn-primary""", "onclick")
+            .find
+            .transform(onclick => FFEvent(onclick))
+            .saveAs("submitItem"),
+      css("""div#itemBody tr.choiceinteraction td.control input[type=\'radio\']""", "name")
+            .findAll
+            .optional
+            .saveAs("singleChoiceNames"),
+      css("""div#itemBody tr.choiceinteraction td.control input[type=\'radio\']""", "value")
+            .findAll
+            .optional
+            .saveAs("singleChoiceValues"),
+          //multiple choices
+      css("""div#itemBody tr.choiceinteraction td.control input[type=\'checkbox\']""", "name")
+            .findAll
+            .optional
+            .saveAs("multipleChoiceNames"),
+      css("""div#itemBody tr.choiceinteraction td.control input[type=\'checkbox\']""", "value")
+            .findAll
+            .optional
+            .saveAs("multipleChoiceValues"),
+          //fillin
+      css("""div#itemBody span.textEntryInteraction input[type=\'text\']""", "name")
+            .findAll
+            .optional
+            .saveAs("fillinNames"),
+          //text
+      css("""div#itemBody div.extendedTextInteraction textarea""", "name")
+            .findAll
+            .optional
+            .saveAs("textNames"))
+  
+  /**
+   * Find and save the list of items in the menu, count them too and
+   * save the button "End test part"
+   */
+  val menuCheckList: Seq[HttpCheck] = Seq(
+		  css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
+        .findAll
+        .transform(_.map(onclick => FFXHREvent(onclick)))
+        .optional
+        .saveAs("qtiItems"),
+      css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
+        .count
+        .saveAs("numOfItems"),
+      css("""a.o_sel_end_testpart""", "href")
+        .find
+        .transform(href => FFEvent(href))
+        .optional
+        .saveAs("endTestPartButton")
+		  )
 
   /**
    * Login, save the logout button for reuse and
@@ -68,6 +129,8 @@ object QTI21TestPage extends HttpHeaders {
     .check(css("""div#o_main_center_content_inner form""","action")
       .find
       .saveAs("itemAction"))
+    .check(checkListAssessmentItemForm: _*)
+      
 
   /**
    * Finish the test and save the close button
@@ -75,9 +138,11 @@ object QTI21TestPage extends HttpHeaders {
    * @return The builder
    */
   def endTestPart: ChainBuilder = exec(session => {
-      val endTestPartButton = session("endTestPartButton").as[FFXHREvent]
-      val parameters = endTestPartButton.formMap();
-      session.set("formParameters", parameters)
+      val endTestPartButton = session("endTestPartButton").as[FFEvent]
+      val parameters = collection.mutable.HashMap[String, String]()
+      parameters.put("dispatchuri", endTestPartButton.elementId)
+      parameters.put("dispatchevent", endTestPartButton.actionId)
+      session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test part")
         .post("""${itemAction}""")
@@ -85,15 +150,22 @@ object QTI21TestPage extends HttpHeaders {
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
-        .check(css("""div#o_qti_run a.o_sel_end_testpart""","onclick")
+        .check(css("""div#o_qti_run a.o_sel_close_test""","href")
           .find
-          .transform(onclick => FFXHREvent(onclick))
+          .transform(href => FFEvent(href))
           .saveAs("closeTest")))
 
-  def endTestConfirm: ChainBuilder = exec(session => {
-    val endTestPartButton = session("closeTest").as[FFXHREvent]
-    val parameters = endTestPartButton.formMap();
-    session.set("formParameters", parameters)
+  /**
+   * Close the test and save the confirm button
+   *
+   * @return The builder
+   */
+  def closeTestConfirm: ChainBuilder = exec(session => {
+    val closeButton = session("closeTest").as[FFEvent]
+    val parameters = collection.mutable.HashMap[String, String]()
+    parameters.put("dispatchuri", closeButton.elementId)
+    parameters.put("dispatchevent", closeButton.actionId)
+    session.set("formParameters", parameters.toMap[String,String])
   }).exec(
     http("End test and confirm")
       .post("""${itemAction}""")
@@ -107,9 +179,15 @@ object QTI21TestPage extends HttpHeaders {
         .saveAs("confirmClose"))
   )
 
+  /**
+   * Confirm closing the test AND assert the status info
+   * on the course node.
+   *
+   * @return The builder
+   */
   def confirmCloseTest: ChainBuilder = exec(session => {
-    val endTestPartButton = session("confirmClose").as[XHREvent]
-    val closeUrl = endTestPartButton.url();
+    val confirmCloseButton = session("confirmClose").as[XHREvent]
+    val closeUrl = confirmCloseButton.url();
     session.set("closeUrl", closeUrl)
   }).exec(
       http("Confirm close")
@@ -118,9 +196,52 @@ object QTI21TestPage extends HttpHeaders {
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
-        .check(css("""div.o_statusinfo""").find)
+        .check(css("""div.o_statusinfo""")
+        		.find
+        		.saveAs("statusInfo")
+        )
     )
-
+  
+  /**
+   * Confirm closing the test, close the results AND assert
+   * the status info on the course node.
+   *
+   * @return The builder
+   */
+  def confirmCloseTestAndCloseResults: ChainBuilder = exec(session => {
+      val endTestPartButton = session("confirmClose").as[XHREvent]
+      val closeUrl = endTestPartButton.url();
+      session.set("closeUrl", closeUrl)
+    }).exec(
+        http("Confirm close")
+          .post("""${closeUrl}""")
+          .formParam("cid","link_0")
+          .headers(headers_json)
+          .check(status.is(200))
+          .transformResponse(extractJsonResponse)
+          .check(css("""div#o_qti_run a.o_sel_close_results""","href")
+            .find
+            .transform(href => FFEvent(href))
+            .saveAs("closeResults"))
+    ).exec(session => {
+      val closeResultsButton = session("closeResults").as[FFEvent]
+      val parameters = collection.mutable.HashMap[String, String]()
+      parameters.put("dispatchuri", closeResultsButton.elementId)
+      parameters.put("dispatchevent", closeResultsButton.actionId)
+      session.set("formParameters", parameters.toMap[String,String])
+    }).exec(
+      http("Close results")
+        .post("""${itemAction}""")
+        .formParamMap("""${formParameters}""")
+        .headers(headers_json)
+        .check(status.is(200))
+        .transformResponse(extractJsonResponse)
+        .check(css("""div.o_statusinfo""")
+        		.find
+        		.saveAs("statusInfo")
+        )
+    )
+  
   /**
    * Click on an item of the menu and save the data
    * of the question.
@@ -145,42 +266,7 @@ object QTI21TestPage extends HttpHeaders {
           .transformResponse(extractJsonResponse)
           .check(status.is(200))
           .check(css("""div.qtiworks.o_assessmentitem.o_assessmenttest"""))
-          .check(css("""div#itemBody input[type=\'hidden\'][name^=\'qtiworks_presented_\']""", "name")
-            .find(0)
-            .saveAs("formPresentedHidden"))
-          //submit button
-          .check(css("""div#itemBody button.btn-primary""", "onclick")
-            .find
-            .transform(onclick => FFEvent(onclick))
-            .saveAs("submitItem"))
-          //single choice
-          .check(css("""div#itemBody tr.choiceinteraction td.control input[type=\'radio\']""", "name")
-            .findAll
-            .optional
-            .saveAs("singleChoiceNames"))
-          .check(css("""div#itemBody tr.choiceinteraction td.control input[type=\'radio\']""", "value")
-            .findAll
-            .optional
-            .saveAs("singleChoiceValues"))
-          //multiple choices
-          .check(css("""div#itemBody tr.choiceinteraction td.control input[type=\'checkbox\']""", "name")
-            .findAll
-            .optional
-            .saveAs("multipleChoiceNames"))
-          .check(css("""div#itemBody tr.choiceinteraction td.control input[type=\'checkbox\']""", "value")
-            .findAll
-            .optional
-            .saveAs("multipleChoiceValues"))
-          //fillin
-          .check(css("""div#itemBody span.textEntryInteraction input[type=\'text\']""", "name")
-            .findAll
-            .optional
-            .saveAs("fillinNames"))
-          //text
-          .check(css("""div#itemBody div.extendedTextInteraction textarea""", "name")
-            .findAll
-            .optional
-            .saveAs("textNames"))
+          .check(checkListAssessmentItemForm: _*)
       )
     }
 
@@ -239,8 +325,9 @@ object QTI21TestPage extends HttpHeaders {
         .check(css("""button.o_sel_question_menu""", "onclick")
           .find
           .transform(onclick => FFXHREvent(onclick))
-          .saveAs("toSectionButton")
-        )
+          .optional
+          .saveAs("toSectionButton"))
+        .check(menuCheckList: _*)
     ).exec(session => {
       session
         .removeAll("multipleChoiceNames", "multipleChoiceValues",
@@ -260,19 +347,7 @@ object QTI21TestPage extends HttpHeaders {
       .check(status.is(200))
       .transformResponse(extractJsonResponse)
       .check(css("#o_qti_run"))
-      .check(css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
-        .findAll
-        .transform(_.map(onclick => FFXHREvent(onclick)))
-        .optional
-        .saveAs("qtiItems"))
-      .check(css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
-        .count
-        .saveAs("numOfItems"))
-      .check(css("""a.o_sel_end_testpart""", "onclick")
-        .find
-        .transform(onclick => FFXHREvent(onclick))
-        .saveAs("endTestPartButton")
-      )
+      .check(menuCheckList: _*)
   )
 
   def randomWord: String = {

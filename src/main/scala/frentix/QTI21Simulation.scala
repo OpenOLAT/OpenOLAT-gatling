@@ -34,12 +34,13 @@ class QTI21Simulation extends Simulation {
 		.pause(1, thinksToRendezVous)
     .exec(QTI21TestPage.startTest)
     .exec(QTI21TestPage.startWithItems).pause(1, thinks)
+    .exec(QTI21TestPage.postItem)
     .repeat("${numOfItems}", "itemPos") {
-      exec(QTI21TestPage.startItem, QTI21TestPage.postItem, QTI21TestPage.toSection).pause(1, thinks)
+      exec(QTI21TestPage.startItem, QTI21TestPage.postItem).pause(1, thinks)
     }
     .exec(QTI21TestPage.endTestPart).pause(1)
-    .exec(QTI21TestPage.endTestConfirm).pause(1)
-    .exec(QTI21TestPage.confirmCloseTest).pause(1)
+    .exec(QTI21TestPage.closeTestConfirm).pause(1)
+    .exec(QTI21TestPage.confirmCloseTestAndCloseResults).pause(1)
     .exec(LoginPage.logout)
 
 

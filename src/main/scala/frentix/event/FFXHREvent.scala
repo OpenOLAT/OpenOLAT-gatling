@@ -12,12 +12,16 @@ object FFXHREvent {
   def apply(link:String):FFXHREvent = {
     val startIndex = link.indexOf(OFFXHREVENT)
     val endIndex = link.indexOf("');", startIndex)
-    val cleanedLink = link.substring(startIndex + OFFXHREVENT.length, endIndex).replace("true,true,", "")
-    val splittedLink: Array[String] = cleanedLink.split("','")
-    if(splittedLink.length == 7) {
-      new FFXHREvent(splittedLink(0), splittedLink(1), splittedLink(2), splittedLink(3), splittedLink(4), splittedLink(5), splittedLink(6), null, null)
+    val cleanedLink = link.substring(startIndex + OFFXHREVENT.length, endIndex)
+    val splittedLink: Array[String] = cleanedLink.split(",")
+    0 to splittedLink.length - 1 foreach { i =>
+        splittedLink(i) = splittedLink(i).stripPrefix("'").stripSuffix("'")
+    }
+    
+    if(splittedLink.length == 9) {
+      new FFXHREvent(splittedLink(0), splittedLink(1), splittedLink(2), splittedLink(3), splittedLink(4), splittedLink(8), splittedLink(9), null, null)
     } else {
-      new FFXHREvent(splittedLink(0), splittedLink(1), splittedLink(2), splittedLink(3), splittedLink(4), splittedLink(5), splittedLink(6), splittedLink(7), splittedLink(8))
+      new FFXHREvent(splittedLink(0), splittedLink(1), splittedLink(2), splittedLink(3), splittedLink(4), splittedLink(8), splittedLink(9), splittedLink(10), splittedLink(11))
     }
   }
 }

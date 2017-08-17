@@ -153,31 +153,38 @@ object QTI21TestPage extends HttpHeaders {
         .check(css("""div#o_qti_run a.o_sel_close_test""","href")
           .find
           .transform(href => FFEvent(href))
-          .saveAs("closeTest")))
+          .optional
+          .saveAs("closeTest"))
+        .check(css("""div.modal-dialog a[onclick*='link_0']""","onclick")
+          .find
+          .transform(onclick => XHREvent(onclick))
+          .optional
+          .saveAs("confirmClose")))
 
   /**
    * Close the test and save the confirm button
    *
    * @return The builder
    */
-  def closeTestConfirm: ChainBuilder = exec(session => {
-    val closeButton = session("closeTest").as[FFEvent]
-    val parameters = collection.mutable.HashMap[String, String]()
-    parameters.put("dispatchuri", closeButton.elementId)
-    parameters.put("dispatchevent", closeButton.actionId)
-    session.set("formParameters", parameters.toMap[String,String])
-  }).exec(
-    http("End test and confirm")
-      .post("""${itemAction}""")
-      .formParamMap("""${formParameters}""")
-      .headers(headers_json)
-      .check(status.is(200))
-      .transformResponse(extractJsonResponse)
-      .check(css("""div.modal-dialog a[onclick*='link_0']""","onclick")
-        .find
-        .transform(onclick => XHREvent(onclick))
-        .saveAs("confirmClose"))
-  )
+  def closeTestConfirm: ChainBuilder = doIf(session => session.contains("closeTest")) {
+	  exec(session => {
+      val closeButton = session("closeTest").as[FFEvent]
+      val parameters = collection.mutable.HashMap[String, String]()
+      parameters.put("dispatchuri", closeButton.elementId)
+      parameters.put("dispatchevent", closeButton.actionId)
+      session.set("formParameters", parameters.toMap[String,String])
+    }).exec(
+      http("End test and confirm")
+        .post("""${itemAction}""")
+        .formParamMap("""${formParameters}""")
+        .headers(headers_json)
+        .check(status.is(200))
+        .transformResponse(extractJsonResponse)
+        .check(css("""div.modal-dialog a[onclick*='link_0']""","onclick")
+          .find
+          .transform(onclick => XHREvent(onclick))
+          .saveAs("confirmClose"))
+    )}
 
   /**
    * Confirm closing the test AND assert the status info
@@ -185,11 +192,12 @@ object QTI21TestPage extends HttpHeaders {
    *
    * @return The builder
    */
-  def confirmCloseTest: ChainBuilder = exec(session => {
-    val confirmCloseButton = session("confirmClose").as[XHREvent]
-    val closeUrl = confirmCloseButton.url();
-    session.set("closeUrl", closeUrl)
-  }).exec(
+  def confirmCloseTest: ChainBuilder = 
+      exec(session => {
+      val confirmCloseButton = session("confirmClose").as[XHREvent]
+      val closeUrl = confirmCloseButton.url();
+      session.set("closeUrl", closeUrl)
+    }).exec(
       http("Confirm close")
         .post("""${closeUrl}""")
         .formParam("cid","link_0")

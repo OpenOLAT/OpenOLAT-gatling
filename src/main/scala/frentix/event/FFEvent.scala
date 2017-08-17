@@ -23,8 +23,13 @@ import scala.collection.immutable
 
 object FFEvent {
   def apply(link:String):FFEvent = {
-    var cleanedLink = link.replace("javascript:o_ffEvent('", "").replace("')", "")
-    var splittedLink: Array[String] = cleanedLink.split("','")
+    var start = "o_ffEvent('";
+    var startIndex = link.indexOf(start) + start.length();
+    var cleanedLink = link.substring(startIndex, link.length() -2);
+    var splittedLink: Array[String] = cleanedLink.split(",")
+    0 to splittedLink.length - 1 foreach { i =>
+        splittedLink(i) = splittedLink(i).stripPrefix("'").stripSuffix("'")
+    }
     new FFEvent(splittedLink(0), splittedLink(1), splittedLink(2), splittedLink(3), splittedLink(4))
   }
 }

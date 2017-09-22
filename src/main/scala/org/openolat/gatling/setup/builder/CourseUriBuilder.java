@@ -269,7 +269,7 @@ public class CourseUriBuilder {
 		return null;
 	}
 	
-	public CourseVO importCourse(String shortTitle, String title, File courseZip, int access, boolean membersOnly)
+	public CourseVO importCourse(String shortTitle, File courseZip, int access, boolean membersOnly)
 	throws IOException, URISyntaxException {
 		URI uri = getCoursesUri().build();
 		HttpPost method = connection.createPost(uri, MediaType.APPLICATION_JSON);
@@ -333,18 +333,6 @@ public class CourseUriBuilder {
 		int code = response.getStatusLine().getStatusCode();
 		EntityUtils.consume(response.getEntity());
 		return code == 200;
-	}
-	
-	private void appendStandardQueryParams(UriBuilder uriBuilder, int pos, String shortTitle, String longTitle, String objectives, GroupVO visibilityGroup, CourseVO course) {
-		uriBuilder.queryParam("parentNodeId", course.getEditorRootNodeId());
-		uriBuilder.queryParam("position", Integer.toString(pos));
-		uriBuilder.queryParam("shortTitle", shortTitle);
-		uriBuilder.queryParam("longTitle", longTitle == null ? "" : longTitle);
-		uriBuilder.queryParam("objectives", objectives == null ? "" : objectives);
-		if(visibilityGroup != null) {
-			String rule = "( inLearningGroup(\"" + visibilityGroup.getName() + "\") )";
-			uriBuilder.queryParam("visibilityExpertRules", rule);	
-		}
 	}
 	
 	/**

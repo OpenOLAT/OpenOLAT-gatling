@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class SetupInstance {
 
-	private static final String url = "http://localhost:8081/olat";
+	private static final String url = "http://localhost:8081";
 
 	public static final File avatars = new File("/Users/srosse/Pictures/Avatars");
 
@@ -37,7 +37,7 @@ public class SetupInstance {
 
 			RestConnectionPool pool = new RestConnectionPool(connections);
 			//start
-			new SetupInstance().setup(smallInstance, pool);
+			new SetupInstance().setup(extraLargeInstance, pool);
 			System.out.println("The End");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,6 +75,7 @@ public class SetupInstance {
 	private static Config mediumInstance = new Config();
 	private static Config largeInstance = new Config();
 	private static Config extraLargeInstance = new Config();
+	private static Config xxLargeInstance = new Config();
 
 	static {
 		smallInstance.numOfUsers = 500;
@@ -128,6 +129,19 @@ public class SetupInstance {
 		extraLargeInstance.maxDepth = 2;
 		extraLargeInstance.averageCatalogChildCourses = 50;
 		extraLargeInstance.averageCatalogChildNodes = 20;
+		
+		xxLargeInstance.numOfUsers = 40000;
+		xxLargeInstance.numOfGroups = 40000;
+		xxLargeInstance.averageGroupOwners = 5;
+		xxLargeInstance.averageGroupParticipants = 25;
+		xxLargeInstance.numOfEmptyCourses = 40000;
+		xxLargeInstance.averageCourseOwners = 10;
+		xxLargeInstance.averageCourseTutors = 10;
+		xxLargeInstance.averageCourseParticipants = 25;
+		xxLargeInstance.averageCourseGroups = 10;
+		xxLargeInstance.maxDepth = 2;
+		xxLargeInstance.averageCatalogChildCourses = 10;
+		xxLargeInstance.averageCatalogChildNodes = 10;
 	}
 
 	public static class Config {

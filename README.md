@@ -50,6 +50,8 @@ Disable the debug settings
 olat.debug=false
 localization.cache=true
 
+Disable the SMS feature for password recovery
+
 Check that the setting "server.legacy.context" is coherent with your setup.
 
 If you start OpenOLAT in Eclipse or an other IDE, don't forget to limit the 

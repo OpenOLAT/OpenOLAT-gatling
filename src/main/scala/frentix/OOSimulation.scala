@@ -30,9 +30,9 @@ import io.gatling.http.Predef._
  */
 class OOSimulation extends Simulation {
 
-	val numOfUsers = Integer.getInteger("users", 1)
+	val numOfUsers = Integer.getInteger("users", 50)
 	val ramp = Integer.getInteger("ramp", 50)
-	val url = System.getProperty("url", "http://localhost:8080")
+	val url = System.getProperty("url", "http://localhost:8081")
 	val thinks = Integer.getInteger("thinks", 5)
 
 	val httpProtocol = http
@@ -45,18 +45,17 @@ class OOSimulation extends Simulation {
 		
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
-		.pause(1)		
+		.pause(thinks)
 		.feed(csv("oo_user_credentials_big.csv"))
 		.exec(LoginPage.loginToMyCourses)
-		/*.repeat(5, "n") {
-		  exec(GroupPage.myGroupsAndSelectCourse(thinks))
-	  }*/
+		//.repeat(5, "n") { exec(GroupPage.myGroupsAndSelectCourse(thinks)) }
 		.repeat(5, "n") {
-			exec(CoursePage.selectCourseNavigateAndBack(thinks, thinks))
-			//exec(CoursePage.selectCourseAndBack(thinks))
+			//exec(CoursePage.selectCourseNavigateAndBack(thinks, thinks))
+			exec(CoursePage.selectCourseAndBack(thinks))
 		}
-  	.pause(5)
-  	.exec(LoginPage.logout)
+  	  .pause(5)
+  	  .exec(LoginPage.logout)
+  	  
 
 	setUp(uibkScn.inject(rampUsers(numOfUsers) over (ramp seconds))).protocols(httpProtocol)
 	

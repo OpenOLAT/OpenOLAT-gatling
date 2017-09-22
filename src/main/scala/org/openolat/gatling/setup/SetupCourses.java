@@ -20,6 +20,21 @@ import java.util.function.Consumer;
  * Created by srosse on 20.02.15.
  */
 public class SetupCourses {
+	
+	private final URL[] courseArchiveUrls = new URL[] {
+		SetupCourses.class.getResource("/data/Test_1_Forum.zip"),
+		SetupCourses.class.getResource("/data/Test_2_CP_Assessment.zip"),
+		SetupCourses.class.getResource("/data/Test_3_Participant_folder.zip"),
+		SetupCourses.class.getResource("/data/Test_4_Calendar.zip"),
+		SetupCourses.class.getResource("/data/Test_5_Very_small_course.zip"),
+		SetupCourses.class.getResource("/data/Test_5_Very_small_course.zip"),
+		SetupCourses.class.getResource("/data/Test_6_Structured.zip"),
+		SetupCourses.class.getResource("/data/Test_7_Date_enrollment.zip"),
+		//SetupCourses.class.getResource("/data/Test_8_Group_enrollment.zip"),
+		SetupCourses.class.getResource("/data/Test_9_Folder.zip"),
+		SetupCourses.class.getResource("/data/Test_10_Notifications.zip"),
+		SetupCourses.class.getResource("/data/Test_11_Checklist.zip")
+	};
 
 	private final RestConnectionPool pool;
 
@@ -75,13 +90,18 @@ public class SetupCourses {
 			}
 		}
 
-		URL smallCourseUrl = SetupCourses.class.getResource("/data/Test_5_Very_small_course.zip");
+		URL smallCourseUrl = getRandomCourseArchive();
 		File smallCourse = new File(smallCourseUrl.toURI());
 		CreateCourse createCourse = new CreateCourse(pool, smallCourse,
 				averageAuthors, averageCoach, averageParticipant, averageGroups,
 				users, groups, existingCourses);
 		coursesToCreate.parallelStream().forEach(createCourse);
 		return existingCourses;
+	}
+	
+	private URL getRandomCourseArchive() {
+		int i = rnd.nextInt(courseArchiveUrls.length);
+		return courseArchiveUrls[i];
 	}
 
 	public static class CreateCourse implements Consumer<CourseDef> {
@@ -124,7 +144,7 @@ public class SetupCourses {
 			RestConnection connection = pool.borrow();
 			try {
 				courseUriBuilder = new CourseUriBuilder(connection);
-				CourseVO course = courseUriBuilder.importCourse(title, title,
+				CourseVO course = courseUriBuilder.importCourse(title,
 						smallCourse, courseDef.getAccess(), courseDef.isMembersOnly());
 
 				if (course != null) {

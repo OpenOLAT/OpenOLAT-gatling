@@ -34,6 +34,7 @@ class OOSimulation extends Simulation {
 	val ramp = Integer.getInteger("ramp", 50)
 	val url = System.getProperty("url", "http://localhost:8081")
 	val thinks = Integer.getInteger("thinks", 5)
+	val rate = numOfUsers.toDouble / ramp;
 
 	val httpProtocol = http
 		.baseURL(url)
@@ -57,6 +58,9 @@ class OOSimulation extends Simulation {
   	  .exec(LoginPage.logout)
   	  
 
-	setUp(uibkScn.inject(rampUsers(numOfUsers) over (ramp seconds))).protocols(httpProtocol)
+	setUp(uibkScn.inject(
+	    constantUsersPerSec(rate.toInt) during(ramp seconds)
+	    
+	)).protocols(httpProtocol)
 	
 }

@@ -37,7 +37,7 @@ The test is the UIBK like test as above:
    - Version: 10.5++, 388 queries/s, some errors due to users without courses, 99% < 8.1s
    
    
-2017-0921: Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK llike
+2017-09-21: Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
    - Version: 12.1, 233 queries/s, some errors due to users without courses, 99% < 31s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
    - With 6000 users: 266 queries/s, some errors due to users without courses, 99% < 43s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
   

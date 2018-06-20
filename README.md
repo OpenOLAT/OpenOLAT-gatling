@@ -1,54 +1,55 @@
-OpenOLAT Gatling Test
-=========================
+# OpenOLAT Gatling Test
 
 
-Setup the project with Eclipse
-------------------------------
+## Setup the project with Eclipse
 
 This project is tested with Scala-IDE 4.4.1 and Scala 2.11.8
 
 To finish the set-up, add this in .project:
 
-	<buildSpec>
-		<buildCommand>
-			<name>org.scala-ide.sdt.core.scalabuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.m2e.core.maven2Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-	</buildSpec>
-	<natures>
-		<nature>org.scala-ide.sdt.core.scalanature</nature>
-		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.m2e.core.maven2Nature</nature>
-	</natures> 
+```bash
+<buildSpec>
+	<buildCommand>
+		<name>org.scala-ide.sdt.core.scalabuilder</name>
+		<arguments>
+		</arguments>
+	</buildCommand>
+	<buildCommand>
+		<name>org.eclipse.m2e.core.maven2Builder</name>
+		<arguments>
+		</arguments>
+	</buildCommand>
+</buildSpec>
+<natures>
+	<nature>org.scala-ide.sdt.core.scalanature</nature>
+	<nature>org.eclipse.jdt.core.javanature</nature>
+	<nature>org.eclipse.m2e.core.maven2Nature</nature>
+</natures> 
+```
 	
 Then save and refresh your project Your project > Maven > Update Project...
 
-Setup the project with IDEA
----------------------------
+## Setup the project with IDEA
 
 I use the Plugin for Scala and Scala 2.11.8
 
-
-Before launching a test
------------------------
+## Before launching a test
 
 You need to adapt your OpenOLAT instance to the Gatling tests. Remove the landing page
 settings and set these settings in your olat.local.properties
 
+```
 history.back.enabled=false
 history.resume.enabled=false
 registration.enableDisclaimer=false
+```
 
 Disable the debug settings
 
+```
 olat.debug=false
 localization.cache=true
+```
 
 Disable the SMS feature for password recovery
 
@@ -57,39 +58,77 @@ Check that the setting "server.legacy.context" is coherent with your setup.
 If you start OpenOLAT in Eclipse or an other IDE, don't forget to limit the 
 output in the console as it can kill the performance.
 
-Launch a test
--------------
+## Launch a test
 
 Compile the code with your preferred IDE or with the following command:
 
-	$mvn compile
+```bash
+$mvn compile
+```
 
 To test it out, simply execute the following command:
 
-    $mvn gatling:execute -Dgatling.simulationClass=frentix.OOSimulation
+```bash
+$mvn gatling:execute -Dgatling.simulationClass=frentix.OOSimulation
+```
 
 or simply:
 
-    $mvn gatling:execute
+```bash
+$mvn gatling:execute
+```
 
 With all options:
 
-    $mvn gatling:execute -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
-    
-    $mvn gatling:execute -Dusers=500 -Dthinks=10 -Dramp=50 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
+```bash
+$mvn gatling:execute -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
+```
+
+```bash
+$mvn gatling:execute -Dusers=500 -Dthinks=10 -Dramp=50 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
+```
 
 Where users are the number of users, the ramp is in seconds and the url is... the url of OpenOLAT
 
+## Some results
 
-OS Optimization for Mac (Maverick and not Yosemite)
----------------------------------------------------
-Source: gatling.io
+The tests were done  on MacBook Pro 2015 (4 cores), PostgreSQL, without Apache
 
-sudo sysctl -w kern.maxfilesperproc=300000
-sudo sysctl -w kern.maxfiles=300000
-sudo sysctl -w net.inet.ip.portrange.first=1024
+The test is the UIBK like test:
+- login, open a course or the details page and return to "My courses" 5 five times, logout.
+- 2000 users ramp up in 50 seconds
+- 5 seconds between opening courses
+- 50 seconds before logout
 
-My settings before as backup:
-kern.maxfilesperproc: 10240
-kern.maxfiles: 12288
-net.inet.ip.portrange.first: 49152
+1. Standard configuration for OpenOLAT (chat, rating, comments)
+..* Version: 10.0.2, 133 queries/s, 1% errors (timeout)
+
+2. OpenOLAT without rating and comments but with chat
+..* Version: 10.0.0, 180 queries/s, 0% errors (but there is some errors)
+   
+3. OpenOLAT without rating, comments and chat
+..* Version: 10.0.0, 187 queries/s, 1% errors
+
+--------------------------------------------------
+
+The test is the UIBK like test as above:
+- login, open a course or the details page and return to "My courses" 5 five times, logout.
+- 4000 users ramp up in 50 seconds
+- 1 seconds between opening courses
+- 50 seconds before logout
+
+1. Standard configuration for OpenOLAT (chat, rating, comments)
+- Version: 10.4b, 315 queries/s, some errors due to users without courses, 99% < 7s
+   
+
+2015-11-18: Standard configuration for OpenOLAT (chat, rating, comments), UIBK like
+- Version: 10.4b, 278 queries/s, some errors due to users without courses, 99% < 11s
+   
+2016-02-01: Standard configuration for OpenOLAT (chat, rating, comments), UIBK like
+- Version: 10.5++, 388 queries/s, some errors due to users without courses, 99% < 8.1s
+ 
+2017-09-21: Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
+- Version: 12.1, 233 queries/s, some errors due to users without courses, 99% < 31s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 6000 users: 266 queries/s, some errors due to users without courses, 99% < 43s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+   
+2018-06-18: change to ramp from an exponential (discourage by gatling team) to a more classic one

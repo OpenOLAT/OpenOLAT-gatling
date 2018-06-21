@@ -3,7 +3,7 @@
 
 ## Setup the project with Eclipse
 
-This project is tested with Scala-IDE 4.4.1 and Scala 2.11.8
+This project is tested with Scala-IDE 4.7.0 and Scala 2.12.3
 
 To finish the set-up, add this in .project:
 
@@ -31,7 +31,7 @@ Then save and refresh your project Your project > Maven > Update Project...
 
 ## Setup the project with IDEA
 
-I use the Plugin for Scala and Scala 2.11.8
+I use the Plugin for Scala and Scala 2.12.3
 
 ## Before launching a test
 

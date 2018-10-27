@@ -59,7 +59,7 @@ class OOSimulation extends Simulation {
   	  
 
 	setUp(uibkScn.inject(
-	    constantUsersPerSec(rate.toInt) during(ramp seconds)
+	    constantUsersPerSec(rate.toDouble) during(ramp seconds)
 	    
 	)).protocols(httpProtocol)
 	

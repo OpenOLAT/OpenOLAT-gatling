@@ -132,3 +132,8 @@ The test is the UIBK like test as above:
 - With 6000 users: 266 queries/s, some errors due to users without courses, 99% < 43s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
    
 2018-06-18: change to ramp from an exponential (discourage by gatling team) to a more classic one
+
+2018-09-27:Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
+- Version: 13.0a, 312 queries/s, some errors due to users without courses, 99% < 15s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 6000 users: 296 queries/s, some errors due to users without courses, 99% < 43s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+  

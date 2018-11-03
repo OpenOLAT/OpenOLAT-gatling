@@ -43,6 +43,7 @@ class OOSimulation extends Simulation {
 		.acceptLanguageHeader("de-de")
 		.connectionHeader("keep-alive")
 		.userAgentHeader("Mozilla/5.0")
+		//.inferHtmlResources()
 		
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)

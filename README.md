@@ -133,7 +133,9 @@ The test is the UIBK like test as above:
    
 2018-06-18: change to ramp from an exponential (discourage by gatling team) to a more classic one
 
-2018-09-27:Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
-- Version: 13.0a, 312 queries/s, some errors due to users without courses, 99% < 15s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
-- With 6000 users: 296 queries/s, some errors due to users without courses, 99% < 43s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
-  
+2018-09-01: New hardware for testing MacBook Pro 2018 (hexacore, 2.9Ghz)
+2018-09-27: Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
+- Version: 13.0a, 283 queries/s, some errors due to users without courses, avg. < 6.5s, 99% < 14s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 6000 users: 265 queries/s, some errors due to users without courses, avg. < 12.5s, 99% < 26s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 8000 users: 276 queries/s, some errors due to users without courses, avg. < 21.0s, 99% < 49s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+

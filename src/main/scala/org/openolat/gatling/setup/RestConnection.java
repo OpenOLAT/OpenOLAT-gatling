@@ -62,6 +62,7 @@ import org.apache.http.util.EntityUtils;
 import org.openolat.gatling.setup.voes.CatalogEntryVO;
 import org.openolat.gatling.setup.voes.CourseVO;
 import org.openolat.gatling.setup.voes.GroupVO;
+import org.openolat.gatling.setup.voes.OrganisationVO;
 import org.openolat.gatling.setup.voes.UserVO;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -313,6 +314,16 @@ public class RestConnection implements Closeable {
 		try {
 			ObjectMapper mapper = new ObjectMapper(jsonFactory);
 			return mapper.readValue(body, new TypeReference<List<CourseVO>>(){/* */});
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public final List<OrganisationVO> parseOrganisationArray(HttpEntity entity) {
+		try(InputStream body = entity.getContent()) {
+			ObjectMapper mapper = new ObjectMapper(jsonFactory);
+			return mapper.readValue(body, new TypeReference<List<OrganisationVO>>(){/* */});
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

@@ -135,7 +135,12 @@ The test is the UIBK like test as above:
 
 2018-09-01: New hardware for testing MacBook Pro 2018 (hexacore, 2.9Ghz)
 2018-09-27: Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
-- Version: 13.0a, 283 queries/s, some errors due to users without courses, avg. < 6.5s, 99% < 14s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
-- With 6000 users: 265 queries/s, some errors due to users without courses, avg. < 12.5s, 99% < 26s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
-- With 8000 users: 276 queries/s, some errors due to users without courses, avg. < 21.0s, 99% < 49s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- Version: 13.0a,  283 queries/s, some errors due to users without courses, avg. <  6.5s, 99% < 14.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- Adoptopenjdk  ,  260 queries/s, some errors due to users without courses, avg. <  7.5s, 99% < 15.5s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- Adoptopenjdk11,  270 queries/s, some errors due to users without courses, avg. <  6.8s, 99% < 14.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 6000 users: 265 queries/s, some errors due to users without courses, avg. < 12.5s, 99% < 26.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- Adoptopenjdk11,  270 queries/s, some errors due to users without courses, avg. < 13.8s, 99% < 28.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 8000 users: 276 queries/s, some errors due to users without courses, avg. < 21.0s, 99% < 49.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- Adoptopenjdk11,  282 queries/s, some errors due to users without courses, avg. < 20.0s, 99% < 41.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+
 

@@ -1,18 +1,42 @@
+/**
+ * <a href="http://www.openolat.org">
+ * OpenOLAT - Online Learning and Training</a><br>
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); <br>
+ * you may not use this file except in compliance with the License.<br>
+ * You may obtain a copy of the License at the
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache homepage</a>
+ * <p>
+ * Unless required by applicable law or agreed to in writing,<br>
+ * software distributed under the License is distributed on an "AS IS" BASIS, <br>
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <br>
+ * See the License for the specific language governing permissions and <br>
+ * limitations under the License.
+ * <p>
+ * Initial code contributed and copyrighted by<br>
+ * frentix GmbH, http://www.frentix.com
+ * <p>
+ */
 package org.openolat.gatling.setup;
-
-import org.openolat.gatling.setup.builder.CourseUriBuilder;
-import org.openolat.gatling.setup.voes.CourseVO;
-import org.openolat.gatling.setup.voes.GroupVO;
-import org.openolat.gatling.setup.voes.UserVO;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
+
+import org.openolat.gatling.setup.builder.CourseUriBuilder;
+import org.openolat.gatling.setup.voes.CourseVO;
+import org.openolat.gatling.setup.voes.GroupVO;
+import org.openolat.gatling.setup.voes.OrganisationVO;
+import org.openolat.gatling.setup.voes.RepositoryEntryStatusEnum;
+import org.openolat.gatling.setup.voes.UserVO;
 
 /**
  * Make a lot of courses, in parallel
@@ -41,12 +65,14 @@ public class SetupCourses {
 	private final Random rnd = new Random();
 	private final List<UserVO> users;
 	private final List<GroupVO> groups;
+	private final OrganisationVO defOrganisation;
 
-	public SetupCourses(RestConnectionPool pool,
+	public SetupCourses(RestConnectionPool pool, OrganisationVO defOrganisation,
 						Collection<UserVO> users, Collection<GroupVO> groups) {
 		this.pool = pool;
 		this.users = new ArrayList<>(users);
 		this.groups = new ArrayList<>(groups);
+		this.defOrganisation = defOrganisation;
 	}
 
 	protected ConcurrentMap<String,CourseVO> getCourseNamesOnInstance()
@@ -71,7 +97,7 @@ public class SetupCourses {
 		return courses;
 	}
 
-	protected ConcurrentMap<String,CourseVO> creatEmptyCourses(String prefix,
+	protected ConcurrentMap<String,CourseVO> createCourses(String prefix,
 									int numOfCourses, int averageAuthors,
 									int averageCoach, int averageParticipant,
 									int averageGroups)
@@ -84,9 +110,18 @@ public class SetupCourses {
 			if(existingCourses.containsKey(title)) {
 				System.out.println("Course already exists: " + title);
 			} else {
-				int access = (int)Math.round(rnd.nextDouble() * 4.0d);
-				boolean membersOnly = true;
-				coursesToCreate.add(new CourseDef(title, access, membersOnly));
+				int access = (int)Math.round(rnd.nextDouble() * 5.0d);
+				RepositoryEntryStatusEnum status = RepositoryEntryStatusEnum.values()[access];
+				
+				boolean allUsers = false;
+				boolean guests = false;
+				if(rnd.nextDouble() < 0.2d) {
+					allUsers = true;
+					if(rnd.nextDouble() < 0.3d) {
+						guests = true;
+					}
+				}
+				coursesToCreate.add(new CourseDef(title, status, allUsers, guests));
 			}
 		}
 
@@ -94,7 +129,7 @@ public class SetupCourses {
 		File smallCourse = new File(smallCourseUrl.toURI());
 		CreateCourse createCourse = new CreateCourse(pool, smallCourse,
 				averageAuthors, averageCoach, averageParticipant, averageGroups,
-				users, groups, existingCourses);
+				users, groups, existingCourses, defOrganisation);
 		coursesToCreate.parallelStream().forEach(createCourse);
 		return existingCourses;
 	}
@@ -118,19 +153,22 @@ public class SetupCourses {
 
 		private final List<UserVO> users;
 		private final List<GroupVO> groups;
+		private final OrganisationVO organisation;
 		private final ConcurrentMap<String, CourseVO> courses;
 
 		public CreateCourse(RestConnectionPool pool, File smallCourse,
 							int averageAuthors, int averageCoach,
 							int averageParticipant, int averageGroups,
 							List<UserVO> users,  List<GroupVO> groups,
-							ConcurrentMap<String, CourseVO> courses) {
+							ConcurrentMap<String, CourseVO> courses,
+							OrganisationVO organisation) {
 			this.smallCourse = smallCourse;
 			this.pool = pool;
 			this.averageAuthors = averageAuthors;
 			this.averageCoach = averageCoach;
 			this.averageParticipant = averageParticipant;
 			this.averageGroups = averageGroups;
+			this.organisation = organisation;
 
 			this.users = users;
 			this.groups = groups;
@@ -144,8 +182,8 @@ public class SetupCourses {
 			RestConnection connection = pool.borrow();
 			try {
 				courseUriBuilder = new CourseUriBuilder(connection);
-				CourseVO course = courseUriBuilder.importCourse(title,
-						smallCourse, courseDef.getAccess(), courseDef.isMembersOnly());
+				CourseVO course = courseUriBuilder.importCourse(title, smallCourse,
+						organisation, courseDef.getStatus(), courseDef.isAllUsers(), courseDef.isGuests());
 
 				if (course != null) {
 					courses.put(course.getTitle(), course);
@@ -218,25 +256,31 @@ public class SetupCourses {
 	public static class CourseDef {
 
 		private final String name;
-		private final int access;
-		private final boolean membersOnly;
+		private final boolean guests;
+		private final boolean allUsers;
+		private final RepositoryEntryStatusEnum status;
 
-		public CourseDef(String name, int access, boolean membersOnly) {
+		public CourseDef(String name, RepositoryEntryStatusEnum status, boolean allUsers, boolean guests) {
 			this.name = name;
-			this.access = access;
-			this.membersOnly = membersOnly;
+			this.status = status;
+			this.guests = guests;
+			this.allUsers = allUsers;
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public int getAccess() {
-			return access;
+		public RepositoryEntryStatusEnum getStatus() {
+			return status;
 		}
 
-		public boolean isMembersOnly() {
-			return membersOnly;
+		public boolean isGuests() {
+			return guests;
+		}
+
+		public boolean isAllUsers() {
+			return allUsers;
 		}
 	}
 

@@ -238,10 +238,14 @@ public class CourseUriBuilder {
 		return Collections.emptyList();
 	}
 	
-	public CourseVO createEmptyCourse(String shortTitle, String title)
+	public CourseVO createEmptyCourse(String shortTitle, String title, OrganisationVO organisation)
 	throws URISyntaxException, IOException {
 		//create an empty course
-		URI uri = getCoursesUri().queryParam("shortTitle", shortTitle).queryParam("title", title).build();
+		URI uri = getCoursesUri()
+				.queryParam("shortTitle", shortTitle)
+				.queryParam("title", title)
+				.queryParam("organisationKey", organisation.getKey())
+				.build();
 		HttpPut method = connection.createPut(uri, MediaType.APPLICATION_JSON);
 		HttpResponse response = connection.execute(method);
 		if(response.getStatusLine().getStatusCode() == 200) {
@@ -269,7 +273,8 @@ public class CourseUriBuilder {
 		return null;
 	}
 	
-	public CourseVO importCourse(String shortTitle, File courseZip, int access, boolean membersOnly)
+	public CourseVO importCourse(String shortTitle, File courseZip, OrganisationVO organisation,
+			RepositoryEntryStatusEnum status, boolean allUsers, boolean guests)
 	throws IOException, URISyntaxException {
 		URI uri = getCoursesUri().build();
 		HttpPost method = connection.createPost(uri, MediaType.APPLICATION_JSON);
@@ -280,17 +285,11 @@ public class CourseUriBuilder {
 				.addTextBody("displayname", shortTitle)
 				.addTextBody("softkey", UUID.randomUUID().toString().replace("-", "").substring(0, 30))
 				.addTextBody("filename", courseZip.getName())
+				.addTextBody("organisationKey", organisation.getKey().toString())
+				.addTextBody("status", status.name())
+				.addTextBody("allUsers", String.valueOf(allUsers))
+				.addTextBody("guests", String.valueOf(guests))
 				.addBinaryBody("file", courseZip, ContentType.APPLICATION_OCTET_STREAM, courseZip.getName());
-
-		if(membersOnly) {
-			entityBuilder.addTextBody("access", "1").addTextBody("membersOnly", "true");
-		} else {
-			String accessStr = "3";
-			if(access > 0 && access < 5) {
-				accessStr = Integer.toString(access);
-			}
-			entityBuilder.addTextBody("access", accessStr);
-		}
 
 		method.setEntity(entityBuilder.build());
 		HttpResponse response = connection.execute(method);

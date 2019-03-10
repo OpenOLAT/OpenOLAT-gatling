@@ -1,16 +1,38 @@
+/**
+ * <a href="http://www.openolat.org">
+ * OpenOLAT - Online Learning and Training</a><br>
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); <br>
+ * you may not use this file except in compliance with the License.<br>
+ * You may obtain a copy of the License at the
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache homepage</a>
+ * <p>
+ * Unless required by applicable law or agreed to in writing,<br>
+ * software distributed under the License is distributed on an "AS IS" BASIS, <br>
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <br>
+ * See the License for the specific language governing permissions and <br>
+ * limitations under the License.
+ * <p>
+ * Initial code contributed and copyrighted by<br>
+ * frentix GmbH, http://www.frentix.com
+ * <p>
+ */
 package org.openolat.gatling.setup;
 
 
-import org.openolat.gatling.setup.voes.CourseVO;
-import org.openolat.gatling.setup.voes.GroupVO;
-import org.openolat.gatling.setup.voes.UserVO;
-
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
+
+import org.openolat.gatling.setup.builder.OrganisationUriBuilder;
+import org.openolat.gatling.setup.voes.CourseVO;
+import org.openolat.gatling.setup.voes.GroupVO;
+import org.openolat.gatling.setup.voes.OrganisationVO;
+import org.openolat.gatling.setup.voes.UserVO;
 
 /**
  * Setup an instance with some datas
@@ -19,13 +41,13 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class SetupInstance {
 
-	private static final String url = "http://localhost:8081";
+	private static final String url = "http://localhost:8080";
 
 	public static final File avatars = new File("/Users/srosse/Pictures/Avatars");
 
 	public static void main(String[] args) {
 		try {
-			//build the connection pool
+			//build the connection pool (for MySQL setup, use only 1 connection)
 			List<RestConnection> connections = new ArrayList<>(4);
 			connections.add(new RestConnection(new URL(url), "admin1", "admin01"));
 			connections.add(new RestConnection(new URL(url), "admin2", "admin02"));
@@ -37,7 +59,7 @@ public class SetupInstance {
 
 			RestConnectionPool pool = new RestConnectionPool(connections);
 			//start
-			new SetupInstance().setup(extraLargeInstance, pool);
+			new SetupInstance().setup(xxLargeInstance, pool);
 			System.out.println("The End");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -46,6 +68,8 @@ public class SetupInstance {
 
 	private void setup(Config instance, RestConnectionPool pool)
 			throws IOException, URISyntaxException, InterruptedException {
+		
+		OrganisationVO defOrganisation = getDefaultOrganisation(pool); 
 
 		// create or load users
 		ConcurrentMap<String,UserVO> users = new SetupUsers(pool)
@@ -59,8 +83,8 @@ public class SetupInstance {
 				//.getGroupNamesOnInstance();
 
 		//create courses
-		ConcurrentMap<String,CourseVO> courses = new SetupCourses(pool, users.values(), groups.values())
-				.creatEmptyCourses("zcourse-1", instance.numOfEmptyCourses,
+		ConcurrentMap<String,CourseVO> courses = new SetupCourses(pool, defOrganisation, users.values(), groups.values())
+				.createCourses("zcourse-1", instance.numOfEmptyCourses,
 						instance.averageCourseOwners, instance.averageCourseTutors,
 						instance.averageCourseParticipants, instance.averageCourseGroups);
 				//.getCourseNamesOnInstance();
@@ -69,6 +93,25 @@ public class SetupInstance {
 		new SetupEfficiencyStatements(pool, courses.values())
 				.createStatements();
 
+	}
+	
+	private OrganisationVO getDefaultOrganisation(RestConnectionPool pool) {
+		RestConnection connection = pool.borrow();
+		try {
+			OrganisationUriBuilder orgBuilder = new OrganisationUriBuilder(connection);
+			List<OrganisationVO> organisations = orgBuilder.getOrganisations();
+			for(OrganisationVO organisation:organisations) {
+				if("default-org".equals(organisation.getIdentifier())) {
+					return organisation;
+				}
+			}
+			return null;
+		} catch (IOException | URISyntaxException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			pool.giveBack(connection);
+		}
 	}
 
 	private static Config smallInstance = new Config();

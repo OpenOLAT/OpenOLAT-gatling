@@ -103,9 +103,9 @@ object CoursePage extends HttpHeaders {
 					.check(status.is(200))
 					.transformResponse(extractJsonResponse)
 					.check(css("""div.o_coursetable"""))
-					.check(css("""div.o_meta h4.o_title a""","href")
+					.check(css("""div.o_meta h4.o_title a""","onclick")
 						.findAll
-						.transform(_.map(href => FFEvent(href)))
+						.transform(_.map(onclick => FFEvent(onclick)))
 						.optional
 						.saveAs("currentCourses"))
 					.check(css("""li.o_site_repository a""","onclick")

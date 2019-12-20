@@ -64,9 +64,9 @@ object LoginPage extends HttpHeaders {
 			.find(0)
 			.transform(onclick => XHREvent(onclick))
 			.saveAs("href_mygroups"))
-		.check(css("""div.o_meta h4.o_title a""","href")
+		.check(css("""div.o_meta h4.o_title a""","onclick")
 			.find(0)
-			.transform(href => FFEvent(href))
+			.transform(onclick => FFEvent(onclick))
 			.optional
 			.saveAs("currentCourse"))
 

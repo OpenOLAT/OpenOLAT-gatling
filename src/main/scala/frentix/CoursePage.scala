@@ -61,7 +61,8 @@ object CoursePage extends HttpHeaders {
 					.formParam("""dispatchevent""", session => session("currentCourse").as[FFEvent].actionId)
 					.transformResponse(extractJsonResponse)
 					.check(status.is(200))
-					.check(css("""div.o_repo_details div.o_lead h1,div.o_course_run"""))
+					// details page, course, share folders
+					.check(css("""div.o_repo_details div.o_lead h1,div.o_course_run,div.o_briefcase"""))
 					.check(nextCourseElementCheckList: _*)
 				)
 		}

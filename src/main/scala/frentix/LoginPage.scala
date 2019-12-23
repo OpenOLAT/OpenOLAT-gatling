@@ -69,6 +69,10 @@ object LoginPage extends HttpHeaders {
 			.transform(onclick => FFEvent(onclick))
 			.optional
 			.saveAs("currentCourse"))
+		.check(css("""div.o_meta h4.o_title a span""")
+			.find(0)
+			.optional
+			.saveAs("currentCourseTitle"))
 
 	/**
 	 * Jump to in OpenOLAT with a REST url ( a business path).

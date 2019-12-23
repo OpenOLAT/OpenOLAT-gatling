@@ -143,4 +143,9 @@ The test is the UIBK like test as above:
 - With 8000 users: 276 queries/s, some errors due to users without courses, avg. < 21.0s, 99% < 49.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
 - Adoptopenjdk11,  282 queries/s, some errors due to users without courses, avg. < 20.0s, 99% < 41.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
 
+2019-12-23: Configuration for OpenOLAT: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
+- With 4000 users: 257 queries/s, some errors due to courses with glossaries, avg. < 7.6s, 99% < 18.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 6000 users: 282 queries/s, some errors due to courses with glossaries, avg. < 13.7s, 99% < 33.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+- With 8000 users: 271 queries/s, some errors due to courses with glossaries, connection timeout (<50), avg. < 21.6s, 99% < 55.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
+
 

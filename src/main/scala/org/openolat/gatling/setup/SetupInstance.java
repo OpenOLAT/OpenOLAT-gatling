@@ -99,13 +99,7 @@ public class SetupInstance {
 		RestConnection connection = pool.borrow();
 		try {
 			OrganisationUriBuilder orgBuilder = new OrganisationUriBuilder(connection);
-			List<OrganisationVO> organisations = orgBuilder.getOrganisations();
-			for(OrganisationVO organisation:organisations) {
-				if("default-org".equals(organisation.getIdentifier())) {
-					return organisation;
-				}
-			}
-			return null;
+			return orgBuilder.getDefaultOrganisation();
 		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
 			return null;

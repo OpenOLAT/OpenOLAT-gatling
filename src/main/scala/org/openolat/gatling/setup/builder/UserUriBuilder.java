@@ -61,13 +61,10 @@ public class UserUriBuilder {
 
 		HttpResponse response = connection.execute(method);
 		if(response.getStatusLine().getStatusCode() == 200) {
-			InputStream body = response.getEntity().getContent();
-			List<UserVO> vos = connection.parseUserArray(body);
-			return vos;
-		} else {
-			System.out.println("getUserByLogin: HTTP Error code: " + response.getStatusLine().getStatusCode());
-			EntityUtils.consume(response.getEntity());
+			return connection.parseUserArray(response);
 		}
+		System.out.println("getUserByLogin: HTTP Error code: " + response.getStatusLine().getStatusCode());
+		EntityUtils.consume(response.getEntity());
 		return null;
 	}
 
@@ -78,8 +75,7 @@ public class UserUriBuilder {
 
 		HttpResponse response = connection.execute(method);
 		if(response.getStatusLine().getStatusCode() == 200) {
-			InputStream body = response.getEntity().getContent();
-			List<UserVO> vos = connection.parseUserArray(body);
+			List<UserVO> vos = connection.parseUserArray(response);
 			if(vos.isEmpty()) {
 				return null;
 			} else if(vos.size() == 1) {

@@ -108,8 +108,7 @@ public class GroupUriBuilder {
 		HttpGet method = connection.createGet(participantsUri, MediaType.APPLICATION_JSON);
 		HttpResponse response = connection.execute(method);
 		if(response.getStatusLine().getStatusCode() == 200) {
-			InputStream body = response.getEntity().getContent();
-			return connection.parseUserArray(body);
+			return connection.parseUserArray(response);
 		}
 		EntityUtils.consume(response.getEntity());
 		return Collections.emptyList();
@@ -120,9 +119,7 @@ public class GroupUriBuilder {
 		HttpGet method = connection.createGet(groupsUri, MediaType.APPLICATION_JSON);
 		HttpResponse response = connection.execute(method);
 		if(response.getStatusLine().getStatusCode() == 200) {
-			InputStream body = response.getEntity().getContent();
-			List<UserVO> owners = connection.parseUserArray(body);
-			return owners;
+			return connection.parseUserArray(response);
 		}
 		EntityUtils.consume(response.getEntity());
 		return Collections.emptyList();

@@ -41,11 +41,17 @@ trait HttpHeaders {
 			new ResponseWrapper(response) {
 				val extractedResponse = new mutable.StringBuilder
 				extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
-				val jsonResponse = (new ObjectMapper()).readTree(response.body.string)
+				val bodyString = response.body.string
+				val jsonResponse = (new ObjectMapper()).readTree(bodyString)
 				val cmds = jsonResponse.get("cmds");
+				//println("***********************************************************")
+				//println("Cmds: " + cmds.size())
+				//println(bodyString)
+				var redirect:String = null;
 				0 to cmds.size() - 1 foreach { i => {
 					val cmd = cmds.get(i)
-					if(cmd.get("cmd").asInt() == 2) {
+					val cmdCode = cmd.get("cmd").asInt()
+					if(cmdCode == 2) {
 						val cps = cmd.get("cda").get("cps");
 						0 to cps.size() - 1 foreach { j => {
 							val cp = cps.get(j);
@@ -56,6 +62,8 @@ trait HttpHeaders {
 								}
 							}
 						}}
+					} else if (cmdCode == 3) {
+					  redirect = cmd.get("cda").get("rurl").asText(); 
 					}
 				}}
 				extractedResponse.append("</body></html>")

@@ -29,10 +29,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 import org.openolat.gatling.setup.RestConnection;
 import org.openolat.gatling.setup.voes.OrganisationVO;
+import org.openolat.gatling.setup.voes.UserVO;
 
 /**
  * 
@@ -47,6 +49,16 @@ public class OrganisationUriBuilder {
 		this.connection = connection;
 	}
 	
+	public OrganisationVO getDefaultOrganisation() throws IOException, URISyntaxException {
+		List<OrganisationVO> organisations = getOrganisations();
+		for(OrganisationVO organisation:organisations) {
+			if("default-org".equals(organisation.getIdentifier())) {
+				return organisation;
+			}
+		}
+		return null;
+	}
+	
 	public List<OrganisationVO> getOrganisations() throws IOException, URISyntaxException {
 		URI organisationsUri = getOrganisationsUri().build();
 		HttpGet method = connection.createGet(organisationsUri, MediaType.APPLICATION_JSON);
@@ -57,6 +69,34 @@ public class OrganisationUriBuilder {
 		EntityUtils.consume(response.getEntity());
 		System.out.println("Cannot get organisations: " + response.getStatusLine().getStatusCode());
 		return Collections.emptyList();
+	}
+	
+	public List<UserVO> getMembers(OrganisationVO organisation, String role)
+	throws IOException, URISyntaxException {
+		URI organisationsUri = getOrganisationsUri()
+				.path(organisation.getKey().toString())
+				.path(role)
+				.build();
+		HttpGet method = connection.createGet(organisationsUri, MediaType.APPLICATION_JSON);
+		HttpResponse response = connection.execute(method);
+		if(response.getStatusLine().getStatusCode() == 200) {
+			return connection.parseUserArray(response);
+		}
+		EntityUtils.consume(response.getEntity());
+		System.out.println("Cannot get organisations: " + response.getStatusLine().getStatusCode());
+		return Collections.emptyList();
+	}
+	
+	public void removeMembership(OrganisationVO organisation, String role, UserVO user)
+	throws IOException, URISyntaxException {
+		URI organisationsUri = getOrganisationsUri()
+				.path(organisation.getKey().toString())
+				.path(role)
+				.path(user.getKey().toString())
+				.build();
+		HttpDelete method = connection.createDelete(organisationsUri, MediaType.APPLICATION_JSON);
+		HttpResponse response = connection.execute(method);
+		EntityUtils.consume(response.getEntity());
 	}
 	
 	public UriBuilder getOrganisationsUri() throws URISyntaxException {

@@ -249,8 +249,7 @@ public class RestConnection implements Closeable {
 	}
 	
 	public <U> U parse(HttpResponse response, Class<U> cl) {
-		try {
-			InputStream body = response.getEntity().getContent();
+		try(InputStream body = response.getEntity().getContent()) {
 			ObjectMapper mapper = new ObjectMapper(jsonFactory);
 			return mapper.readValue(body, cl);
 		} catch (Exception e) {
@@ -269,8 +268,8 @@ public class RestConnection implements Closeable {
 		}
 	}
 
-	public final List<UserVO> parseUserArray(InputStream body) {
-		try {
+	public final List<UserVO> parseUserArray(HttpResponse response) {
+		try(InputStream body = response.getEntity().getContent()) {
 			ObjectMapper mapper = new ObjectMapper(jsonFactory);
 			return mapper.readValue(body, new TypeReference<List<UserVO>>(){ /* */ });
 		} catch (Exception e) {

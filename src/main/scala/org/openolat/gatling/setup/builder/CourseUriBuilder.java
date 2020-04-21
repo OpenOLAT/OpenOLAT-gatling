@@ -149,8 +149,7 @@ public class CourseUriBuilder {
 		HttpGet method = connection.createGet(uri, MediaType.APPLICATION_JSON);
 		HttpResponse response = connection.execute(method);
 		if(response.getStatusLine().getStatusCode() == 200) {
-			InputStream body = response.getEntity().getContent();
-			return connection.parseUserArray(body);
+			return connection.parseUserArray(response);
 		} else {
 			EntityUtils.consume(response.getEntity());
 			System.out.println("getAllCourses HTTP Error code: " + response.getStatusLine().getStatusCode());
@@ -194,8 +193,7 @@ public class CourseUriBuilder {
 		HttpGet method = connection.createGet(uri, MediaType.APPLICATION_JSON);
 		HttpResponse response = connection.execute(method);
 		if(response.getStatusLine().getStatusCode() == 200) {
-			InputStream body = response.getEntity().getContent();
-			return connection.parseUserArray(body);
+			return connection.parseUserArray(response);
 		} else {
 			EntityUtils.consume(response.getEntity());
 			System.out.println("getAllCourses HTTP Error code: " + response.getStatusLine().getStatusCode());

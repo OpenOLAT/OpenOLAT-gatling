@@ -59,6 +59,7 @@ object CoursePage extends HttpHeaders {
 					.headers(headers_json)
 					.formParam("""dispatchuri""", session => session("currentCourse").as[FFEvent].elementId)
 					.formParam("""dispatchevent""", session => session("currentCourse").as[FFEvent].actionId)
+					.formParam("""_csrf""", session => session("csrfToken").as[String])
 					.transformResponse(extractJsonResponse)
 					.check(status.is(200))
 					// details page, course, share folders
@@ -78,6 +79,7 @@ object CoursePage extends HttpHeaders {
 				http("nextCourseElement:selectCourse:${n}")
 				  .post("""${nextElementUrl}""")
 				  .formParam("cid","nextelement")
+				  .formParam("""_csrf""", session => session("csrfToken").as[String])
 					.headers(headers_json)
 					.check(status.is(200))
 					.transformResponse(extractJsonResponse)
@@ -100,6 +102,7 @@ object CoursePage extends HttpHeaders {
 				http("myCourses:${n}")
 					.post("""${myCoursesUrl}""")
 					.formParam("cid","t")
+				  .formParam("""_csrf""", session => session("csrfToken").as[String])
 					.headers(headers_json)
 					.check(status.is(200))
 					.transformResponse(extractJsonResponse)

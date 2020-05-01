@@ -53,9 +53,14 @@ object LoginPage extends HttpHeaders {
 		.formParam("""o_fiooolat_login_name""", "${username}")
 		.formParam("""o_fiooolat_login_pass""", "${password}")
 		.check(status.is(200))
-		.check(css(".o_logout", "href").saveAs("logoutlink"))
+		.check(css(".o_logout", "href")
+		  .saveAs("logoutlink"))
 		//check my courses is loaded
 		.check(css("""div.o_coursetable"""))
+		.check(css("""form input[name=_csrf]""","value")
+			.find(0)
+			.optional
+			.saveAs("csrfToken"))
 		.check(css("""li.o_site_repository a""","onclick")
 			.find(0)
 			.transform(onclick => XHREvent(onclick))

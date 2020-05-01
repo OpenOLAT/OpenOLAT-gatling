@@ -75,7 +75,8 @@ object GroupPage extends HttpHeaders {
 		.doIf(session => session.contains("currentGroup")) {
 			exec(session => {
 				val currentGroupLink = session("currentGroup").as[FFXHREvent]
-				val parameters = currentGroupLink.formMap();
+				val csrfToken = session("csrfToken").as[String]
+				val parameters = currentGroupLink.formMap(csrfToken);
 				session.set("formParameters", parameters)
 			})
 			.exec(

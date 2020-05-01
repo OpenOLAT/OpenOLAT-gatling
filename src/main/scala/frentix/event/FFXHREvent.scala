@@ -60,10 +60,13 @@ class FFXHREvent(form:String, uri:String, element:String, eventField:String, act
   def subCommand : String = _subCmd
   def subCommandValue : String = _subCmdValue
 
-  def formMap() : immutable.Map[String,String] = {
+  def formMap(csrfToken:String) : immutable.Map[String,String] = {
     val parameters = collection.mutable.HashMap[String, String]()
     parameters.put("dispatchuri", elementId)
     parameters.put("dispatchevent", actionId)
+    if(csrfToken != null) {
+      parameters.put("_csrf", csrfToken)
+    }
     parameters.put(command, commandValue)
     if(subCommand != null) {
       parameters.put(subCommand, subCommandValue)

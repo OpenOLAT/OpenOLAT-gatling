@@ -54,10 +54,11 @@ class FFEvent(form:String, uri:String, element:String, eventField:String, action
     "/auth/1%3A1%3A" + formId + "%3A1%3A1%3Aofo_%3Afid/"
   }
 
-  def formMap() : immutable.Map[String,String] = {
+  def formMap(csrfToken:String) : immutable.Map[String,String] = {
     val parameters = collection.mutable.HashMap[String, String]()
     parameters.put("dispatchuri", elementId)
     parameters.put("dispatchevent", actionId)
+    parameters.put("_csrf", csrfToken)
     parameters.toMap[String,String]
   }
   

@@ -97,6 +97,10 @@ object QTI21TestPage extends HttpHeaders {
     .formParam("""o_fiooolat_login_pass""", "${password}")
     .check(status.is(200))
     .check(css(".o_logout", "href").saveAs("logoutlink"))
+    .check(css("""form input[name=_csrf]""","value")
+			.find(0)
+			.optional
+			.saveAs("csrfToken"))
     .check(css("a.o_sel_start_qti21assessment", "onclick")
       .find
       .transform(onclick => XHREvent(onclick))
@@ -142,6 +146,8 @@ object QTI21TestPage extends HttpHeaders {
       val parameters = collection.mutable.HashMap[String, String]()
       parameters.put("dispatchuri", endTestPartButton.elementId)
       parameters.put("dispatchevent", endTestPartButton.actionId)
+      val csrfToken = session("csrfToken").as[String]
+      parameters.put("_csrf", csrfToken)
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test part")
@@ -172,6 +178,8 @@ object QTI21TestPage extends HttpHeaders {
       val parameters = collection.mutable.HashMap[String, String]()
       parameters.put("dispatchuri", closeButton.elementId)
       parameters.put("dispatchevent", closeButton.actionId)
+      val csrfToken = session("csrfToken").as[String]
+      parameters.put("_csrf", csrfToken)
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test and confirm")
@@ -236,6 +244,8 @@ object QTI21TestPage extends HttpHeaders {
       val parameters = collection.mutable.HashMap[String, String]()
       parameters.put("dispatchuri", closeResultsButton.elementId)
       parameters.put("dispatchevent", closeResultsButton.actionId)
+      val csrfToken = session("csrfToken").as[String]
+      parameters.put("_csrf", csrfToken)
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("Close results")
@@ -259,8 +269,9 @@ object QTI21TestPage extends HttpHeaders {
   def startItem: ChainBuilder = exec(session => {
       val itemPos = session("itemPos").as[Int]
       val itemList = session("qtiItems").as[immutable.Vector[FFXHREvent]]
+      val csrfToken = session("csrfToken").as[String]
       if(itemPos < itemList.length) {
-        val parameters = itemList(itemPos).formMap()
+        val parameters = itemList(itemPos).formMap(csrfToken)
         session.set("itemParameters",parameters)
       } else {
         session.remove("itemParameters")
@@ -321,6 +332,8 @@ object QTI21TestPage extends HttpHeaders {
       val submitItem = session("submitItem").as[FFEvent]
       parameters.put("dispatchuri", submitItem.elementId)
       parameters.put("dispatchevent", submitItem.actionId)
+      val csrfToken = session("csrfToken").as[String]
+      parameters.put("_csrf", csrfToken)
       session.set("formParameters", parameters.toMap[String,String])
   }).exec(
       http("Post item:${itemPos}")
@@ -345,7 +358,8 @@ object QTI21TestPage extends HttpHeaders {
 
   def toSection : ChainBuilder = exec(session => {
     val toSectionButton = session("toSectionButton").as[FFXHREvent];
-    val parameters = toSectionButton.formMap();
+    val csrfToken = session("csrfToken").as[String]
+    val parameters = toSectionButton.formMap(csrfToken);
     session.set("formParameters", parameters)
   }).exec(
     http("To section:${itemPos}")

@@ -3,7 +3,7 @@
 
 ## Setup the project with Eclipse
 
-This project is tested with Scala-IDE 4.7.0 and Scala 2.12.3
+This project is tested with Scala-IDE 4.7.0 and Scala 2.12.10
 
 To finish the set-up, add this in .project:
 
@@ -31,7 +31,7 @@ Then save and refresh your project Your project > Maven > Update Project...
 
 ## Setup the project with IDEA
 
-I use the Plugin for Scala and Scala 2.12.3
+I use the Plugin for Scala and Scala 2.12.10
 
 ## Before launching a test
 
@@ -71,7 +71,7 @@ $mvn compile
 To test it out, simply execute the following command:
 
 ```bash
-$mvn gatling:execute -Dgatling.simulationClass=frentix.OOSimulation
+$mvn gatling:test -Dgatling.simulationClass=frentix.OOSimulation
 ```
 
 or simply:
@@ -83,11 +83,11 @@ $mvn gatling:execute
 With all options:
 
 ```bash
-$mvn gatling:execute -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
+$mvn gatling:test -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
 ```
 
 ```bash
-$mvn gatling:execute -Dusers=500 -Dthinks=10 -Dramp=50 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
+$mvn gatling:test -Dusers=500 -Dthinks=10 -Dramp=50 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
 ```
 
 Where users are the number of users, the ramp is in seconds and the url is... the url of OpenOLAT
@@ -165,6 +165,7 @@ The test is the UIBK like test as above:
 - With 6000 users: 371 queries/s, some errors due to courses with glossaries, avg. < 8.9s, 99% < 25.8s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 - With 8000 users: 384 queries/s, some errors due to courses with glossaries, avg. < 13.2s, 99% < 40.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 
+2020-05-03: Update to Gatling 3.3.1
 
 
 

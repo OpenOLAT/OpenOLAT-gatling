@@ -22,7 +22,10 @@ package frentix
 import java.nio.charset.StandardCharsets._
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.gatling.http.response.{Response, StringResponseBody, ResponseWrapper}
+import io.gatling.core.session._
+import io.gatling.http._
+import io.gatling.http.response._
+import io.gatling.commons.validation._
 
 import scala.collection.mutable
 
@@ -35,43 +38,40 @@ trait HttpHeaders {
 	val headers_post = Map(
 		"""Content-Type""" -> """application/x-www-form-urlencoded""",
 		"""Origin""" -> """http://localhost""")
+		
+	def extractJsonResponse: ResponseTransformer = { (session: Session, response: Response) => {
 
-	val extractJsonResponse : PartialFunction[io.gatling.http.response.Response,io.gatling.http.response.Response] = {
-		case response : Response if response.isReceived =>
-			new ResponseWrapper(response) {
-				val extractedResponse = new mutable.StringBuilder
-				extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
-				val bodyString = response.body.string
-				val jsonResponse = (new ObjectMapper()).readTree(bodyString)
-				val cmds = jsonResponse.get("cmds");
-				//println("***********************************************************")
-				//println("Cmds: " + cmds.size())
-				//println(bodyString)
-				var redirect:String = null;
-				0 to cmds.size() - 1 foreach { i => {
-					val cmd = cmds.get(i)
-					val cmdCode = cmd.get("cmd").asInt()
-					if(cmdCode == 2) {
-						val cps = cmd.get("cda").get("cps");
-						0 to cps.size() - 1 foreach { j => {
-							val cp = cps.get(j);
-							if (cp != null && cp.has("hfrag")) {
-								val htmlFragment = cp.get("hfrag").asText()
-								if (!htmlFragment.equals("<!-- empty -->")) {
-									extractedResponse.append(htmlFragment)
-								}
-							}
-						}}
-					} else if (cmdCode == 3) {
-					  redirect = cmd.get("cda").get("rurl").asText(); 
+	  val extractedResponse = new mutable.StringBuilder
+		extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
+		val bodyString = response.body.string
+		val jsonResponse = (new ObjectMapper()).readTree(bodyString)
+		val cmds = jsonResponse.get("cmds");
+		//println("***********************************************************")
+		//println("Cmds: " + cmds.size())
+		//println(bodyString)
+		var redirect:String = null;
+		0 to cmds.size() - 1 foreach { i => {
+			val cmd = cmds.get(i)
+			val cmdCode = cmd.get("cmd").asInt()
+			if(cmdCode == 2) {
+				val cps = cmd.get("cda").get("cps");
+				0 to cps.size() - 1 foreach { j => {
+					val cp = cps.get(j);
+					if (cp != null && cp.has("hfrag")) {
+						val htmlFragment = cp.get("hfrag").asText()
+						if (!htmlFragment.equals("<!-- empty -->")) {
+							extractedResponse.append(htmlFragment)
+						}
 					}
 				}}
-				extractedResponse.append("</body></html>")
-				//println("***********************************************************")
-				//println(extractedResponse.toString())
-				//println("***********************************************************")
-				override def body = new StringResponseBody(extractedResponse.toString(), UTF_8)
+			} else if (cmdCode == 3) {
+				redirect = cmd.get("cda").get("rurl").asText();
 			}
-	}
+		}}
+		
+		extractedResponse.append("</body></html>")
+		val htmlResponse = response.copy(body = new StringResponseBody(extractedResponse.toString(), UTF_8))
+		Success(htmlResponse)
+	}}
 
 }

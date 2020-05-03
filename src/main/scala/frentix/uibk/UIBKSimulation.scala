@@ -34,7 +34,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 class UIBKSimulation extends Simulation {
 
 	val httpProtocol = http
-		.baseURL("https://kivik.frentix.com")
+		.baseUrl("https://kivik.frentix.com")
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
@@ -60,16 +60,16 @@ class UIBKSimulation extends Simulation {
 
 
 	setUp(uibkScn.inject(
-		rampUsers(100) over (singleramptime seconds),
-		rampUsers(300) over (singleramptime seconds),
-		rampUsers(500) over (singleramptime seconds),
-		rampUsers(700) over (singleramptime seconds),
-		rampUsers(900) over (singleramptime seconds),
-		rampUsers(1100) over (singleramptime seconds),
-		rampUsers(1300) over (singleramptime seconds),
-		rampUsers(1500) over (singleramptime seconds),
-		rampUsers(1700) over (singleramptime seconds),
-		rampUsers(1900) over (singleramptime seconds)
+		rampUsers(100) during (singleramptime seconds),
+		rampUsers(300) during (singleramptime seconds),
+		rampUsers(500) during (singleramptime seconds),
+		rampUsers(700) during (singleramptime seconds),
+		rampUsers(900) during (singleramptime seconds),
+		rampUsers(1100) during (singleramptime seconds),
+		rampUsers(1300) during (singleramptime seconds),
+		rampUsers(1500) during (singleramptime seconds),
+		rampUsers(1700) during (singleramptime seconds),
+		rampUsers(1900) during (singleramptime seconds)
 	)).protocols(httpProtocol)
 		
 	

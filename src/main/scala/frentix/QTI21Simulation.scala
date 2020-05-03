@@ -17,7 +17,7 @@ class QTI21Simulation extends Simulation {
   val thinksToRendezVous = (thinks.toInt * 2)
 
   val httpProtocol = http
-    .baseURL(url)
+    .baseUrl(url)
     .acceptHeader("text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .acceptEncodingHeader("gzip, deflate")
     .acceptLanguageHeader("de-de")
@@ -44,5 +44,5 @@ class QTI21Simulation extends Simulation {
     .exec(LoginPage.logout)
 
 
-  setUp(qtiScn.inject(rampUsers(numOfUsers) over (ramp seconds))).protocols(httpProtocol)
+  setUp(qtiScn.inject(rampUsers(numOfUsers) during (ramp seconds))).protocols(httpProtocol)
 }

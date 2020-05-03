@@ -20,9 +20,9 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<encoding>UTF-8</encoding>
 		<scala.tools.version>2.12</scala.tools.version>
-		<scala.version>2.12.3</scala.version>
-		<gatling.version>2.3.0</gatling.version>
-		<gatling.plugin.version>2.2.4</gatling.plugin.version>
+		<scala.version>2.12.10</scala.version>
+		<gatling.version>3.3.1</gatling.version>
+		<gatling.plugin.version>3.0.5</gatling.plugin.version>
 		<downloadSources>true</downloadSources>
 	</properties>
 
@@ -116,6 +116,19 @@
 						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<jvmArgs>
+						<jvmArg>-Xss100M</jvmArg>
+					</jvmArgs>
+					<args>
+						<arg>-target:jvm-1.8</arg>
+						<arg>-deprecation</arg>
+						<arg>-feature</arg>
+						<arg>-unchecked</arg>
+						<arg>-language:implicitConversions</arg>
+						<arg>-language:postfixOps</arg>
+					</args>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -140,7 +153,7 @@
 					<execution>
 						<phase>test</phase>
 						<goals>
-							<goal>execute</goal>
+							<goal>test</goal>
 						</goals>
 						<configuration>
 							<!-- Default values -->

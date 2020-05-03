@@ -37,7 +37,7 @@ class OOSimulation extends Simulation {
 	val rate = numOfUsers.toDouble / ramp;
 
 	val httpProtocol = http
-		.baseURL(url)
+		.baseUrl(url)
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
@@ -48,7 +48,7 @@ class OOSimulation extends Simulation {
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
 		.pause(thinks)
-		.feed(csv("oo_user_credentials_big.csv"))
+		.feed(csv("data/oo_user_credentials_big.csv"))
 		.exec(LoginPage.loginToMyCourses)
 		//.repeat(5, "n") { exec(GroupPage.myGroupsAndSelectCourse(thinks)) }
 		.repeat(5, "n") {

@@ -33,7 +33,7 @@ import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 class UIBKSTSimulation extends Simulation {
 
 	val httpProtocol = http
-		.baseURL("http://localhost:8080")
+		.baseUrl("http://localhost:8080")
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
 		.acceptLanguageHeader("de-de")
@@ -117,7 +117,7 @@ class UIBKSTSimulation extends Simulation {
 				.check(regex("""o_fiooolat_login_button""")))
 
 	setUp(uibkScn.inject(
-		rampUsers(1000) over (70)
+		rampUsers(1000) during (70)
 	)).protocols(httpProtocol)
 
 }

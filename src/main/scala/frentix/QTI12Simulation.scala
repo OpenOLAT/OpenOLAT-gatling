@@ -16,7 +16,7 @@ class QTI12Simulation extends Simulation {
   val thinks = Integer.getInteger("thinks", 5)
 
   val httpProtocol = http
-    .baseURL(url)
+    .baseUrl(url)
     .acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .acceptEncodingHeader("gzip, deflate")
     .acceptLanguageHeader("de-de")
@@ -44,5 +44,5 @@ class QTI12Simulation extends Simulation {
     .exec(LoginPage.logout)
 
 
-  setUp(qtiScn.inject(rampUsers(numOfUsers) over (ramp seconds))).protocols(httpProtocol)
+  setUp(qtiScn.inject(rampUsers(numOfUsers) during (ramp seconds))).protocols(httpProtocol)
 }

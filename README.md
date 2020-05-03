@@ -136,6 +136,7 @@ The test is the UIBK like test as above:
 2018-06-18: change to ramp from an exponential (discourage by gatling team) to a more classic one
 
 2018-09-01: New hardware for testing MacBook Pro 2018 (hexacore, 2.9Ghz)
+
 2018-09-27: Configuration for OpenOlat: chat, rating, comment, lectures, assessment modes, but no portfolio v1, UIBK like
 - Version: 13.0a,  283 queries/s, some errors due to users without courses, avg. <  6.5s, 99% < 14.0s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
 - Adoptopenjdk  ,  260 queries/s, some errors due to users without courses, avg. <  7.5s, 99% < 15.5s, ramp in 60s, thinks 5s (logout too), 90 db connections, NIO2 with 84 threads
@@ -165,7 +166,9 @@ The test is the UIBK like test as above:
 - With 6000 users: 371 queries/s, some errors due to courses with glossaries, avg. < 8.9s, 99% < 25.8s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 - With 8000 users: 384 queries/s, some errors due to courses with glossaries, avg. < 13.2s, 99% < 40.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 
-2020-05-03: Update to Gatling 3.3.1
+2020-05-03: Update to Gatling 3.3.1. This change have an implication on test results. As Gatling needs more than twice the CPU as earlier, the results of OpenOlat load test are lower. The results under are made with the exact same setup as the results above.
+- With 4000 users: 240 queries/s, some errors due to courses with glossaries, avg. < 7.8s, 99% < 33.7s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
+
 
 
 

@@ -118,8 +118,9 @@
 				</executions>
 				<configuration>
 					<jvmArgs>
-						<jvmArg>-Xss100M</jvmArg>
+						<jvmArg>-Xss100M -Xms1024m -Xmx4096m</jvmArg>
 					</jvmArgs>
+					<!--  
 					<args>
 						<arg>-target:jvm-1.8</arg>
 						<arg>-deprecation</arg>
@@ -128,6 +129,7 @@
 						<arg>-language:implicitConversions</arg>
 						<arg>-language:postfixOps</arg>
 					</args>
+					-->
 				</configuration>
 			</plugin>
 			<plugin>

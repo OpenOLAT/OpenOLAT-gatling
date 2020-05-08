@@ -83,11 +83,11 @@ $mvn gatling:execute
 With all options:
 
 ```bash
-$mvn gatling:test -Dusers=100 -Dramp=50 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
+$mvn gatling:test -Dusers=100 -Dramp=60 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
 ```
 
 ```bash
-$mvn gatling:test -Dusers=500 -Dthinks=10 -Dramp=50 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
+$mvn gatling:test -Dusers=500 -Dthinks=10 -Dramp=60 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
 ```
 
 Where users are the number of users, the ramp is in seconds and the url is... the url of OpenOLAT

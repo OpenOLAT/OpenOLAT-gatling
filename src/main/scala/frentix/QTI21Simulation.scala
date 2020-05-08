@@ -10,7 +10,7 @@ class QTI21Simulation extends Simulation {
 
   val numOfUsers = Integer.getInteger("users", 100)
   val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
-  val ramp = Integer.getInteger("ramp", 50)
+  val ramp = Integer.getInteger("ramp", 60)
   val url = System.getProperty("url", "http://localhost:8081")
   val jump = System.getProperty("jump", "/url/RepositoryEntry/35061760/CourseNode/92385798289062")
   val thinks = Integer.getInteger("thinks", 5)

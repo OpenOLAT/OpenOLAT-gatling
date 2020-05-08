@@ -30,8 +30,8 @@ import io.gatling.http.Predef._
  */
 class OOSimulation extends Simulation {
 
-	val numOfUsers = Integer.getInteger("users", 1)
-	val ramp = Integer.getInteger("ramp", 5)
+	val numOfUsers = Integer.getInteger("users", 100)
+	val ramp = Integer.getInteger("ramp", 60)
 	val url = System.getProperty("url", "http://localhost:8081")
 	val thinks = Integer.getInteger("thinks", 5)
 	val rate = numOfUsers.toDouble / ramp;

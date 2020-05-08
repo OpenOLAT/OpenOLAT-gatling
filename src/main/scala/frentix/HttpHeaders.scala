@@ -41,10 +41,10 @@ trait HttpHeaders {
 		
 	def extractJsonResponse: ResponseTransformer = { (session: Session, response: Response) => {
 
-	  val extractedResponse = new mutable.StringBuilder
+	  val extractedResponse = new mutable.StringBuilder(32000)
 		extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
-		val bodyString = response.body.string
-		val jsonResponse = (new ObjectMapper()).readTree(bodyString)
+		val bodyStream = response.body.stream
+		val jsonResponse = (new ObjectMapper()).readTree(bodyStream)
 		val cmds = jsonResponse.get("cmds");
 		//println("***********************************************************")
 		//println("Cmds: " + cmds.size())

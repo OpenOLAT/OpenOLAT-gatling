@@ -23,6 +23,7 @@
 		<scala.version>2.12.10</scala.version>
 		<gatling.version>3.3.1</gatling.version>
 		<gatling.plugin.version>3.0.5</gatling.plugin.version>
+		<scala-maven-plugin.version>4.3.1</scala-maven-plugin.version>
 		<downloadSources>true</downloadSources>
 	</properties>
 
@@ -99,15 +100,13 @@
 				<!-- see http://davidb.github.com/scala-maven-plugin -->
 				<groupId>net.alchim31.maven</groupId>
 				<artifactId>scala-maven-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>${scala-maven-plugin.version}</version>
 				<executions>
 					<execution>
-						<!-- 
 						<goals>
 							<goal>compile</goal>
 							<goal>testCompile</goal>
 						</goals>
-						-->
 						<configuration>
 							<args>
 								<arg>-dependencyfile</arg>
@@ -118,9 +117,8 @@
 				</executions>
 				<configuration>
 					<jvmArgs>
-						<jvmArg>-Xss100M -Xms1024m -Xmx4096m</jvmArg>
+						<jvmArg>-Xss100M</jvmArg>
 					</jvmArgs>
-					<!--  
 					<args>
 						<arg>-target:jvm-1.8</arg>
 						<arg>-deprecation</arg>
@@ -129,7 +127,9 @@
 						<arg>-language:implicitConversions</arg>
 						<arg>-language:postfixOps</arg>
 					</args>
-					-->
+					<excludes>
+     					<exclude>/org/openolat/gatling/setup/**.java</exclude>
+   					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -64,7 +64,7 @@ class FFXHREvent(form:String, uri:String, element:String, eventField:String, act
     val parameters = collection.mutable.HashMap[String, String]()
     parameters.put("dispatchuri", elementId)
     parameters.put("dispatchevent", actionId)
-    if(csrfToken != null) {
+    if(csrfToken != null && csrfToken.length() > 0) {
       parameters.put("_csrf", csrfToken)
     }
     parameters.put(command, commandValue)

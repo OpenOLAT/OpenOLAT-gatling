@@ -117,6 +117,20 @@ object QTI21TestPage extends HttpHeaders {
    */
   def startWithItems: HttpRequestBuilder = http("Start test")
     .post("""${startUrl}""")
+    .resources(
+      http("QtiWorksRendering.js").get("/raw/_noversion_/assessment/rendering/javascript/QtiWorksRendering.js"),
+      http("AsciiMathInputController.js").get("/raw/_noversion_/assessment/rendering/javascript/AsciiMathInputController.js"),
+      http("UpConversionAjaxController.js").get("/raw/_noversion_/assessment/rendering/javascript/UpConversionAjaxController.js"),
+      http("Custion QTI UI.js").get("/raw/_noversion_/js/jquery/ui/jquery-ui-1.11.4.custom.qti.min.js"),
+      http("Maphilight.js").get("/raw/_noversion_/js/jquery/maphilight/jquery.maphilight.js"),
+      http("Paint.js").get("/raw/_noversion_/js/jquery/openolat/jquery.paint.js"),
+      http("Taboverride.js").get("/raw/_noversion_/js/jquery/taboverride/taboverride-4.0.0.min.js"),
+      http("Dragula.js").get("/raw/_noversion_/js/dragula/dragula.min.js"),
+      http("Taboverride jQuery").get("/raw/_noversion_/js/jquery/taboverride/jquery.taboverride.min.js"),
+      http("Qti.js").get("/raw/_noversion_/js/jquery/qti/jquery.qti.min.js"),
+      http("Qti Timer.js").get("/raw/_noversion_/js/jquery/qti/jquery.qtiTimer.js"),
+      http("Qti Autosave.js").get("/raw/_noversion_/js/jquery/qti/jquery.qtiAutosave.js")
+    )
     .formParam("cid","start")
     .headers(headers_json)
     .transformResponse(extractJsonResponse)
@@ -130,7 +144,7 @@ object QTI21TestPage extends HttpHeaders {
     .check(css("""div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem""","onclick")
       .count
       .saveAs("numOfItems"))
-    .check(css("""div#o_main_center_content_inner form""","action")
+    .check(css("""div#o_qti_container form""","action")
       .find
       .saveAs("itemAction"))
     .check(checkListAssessmentItemForm: _*)
@@ -146,8 +160,7 @@ object QTI21TestPage extends HttpHeaders {
       val parameters = collection.mutable.HashMap[String, String]()
       parameters.put("dispatchuri", endTestPartButton.elementId)
       parameters.put("dispatchevent", endTestPartButton.actionId)
-      val csrfToken = session("csrfToken").as[String]
-      parameters.put("_csrf", csrfToken)
+      parameters.put("_csrf", session("csrfToken").asOption[String].getOrElse(""))
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test part")
@@ -178,8 +191,8 @@ object QTI21TestPage extends HttpHeaders {
       val parameters = collection.mutable.HashMap[String, String]()
       parameters.put("dispatchuri", closeButton.elementId)
       parameters.put("dispatchevent", closeButton.actionId)
-      val csrfToken = session("csrfToken").as[String]
-      parameters.put("_csrf", csrfToken)
+      parameters.put("_csrf", session("csrfToken").asOption[String].getOrElse(""))
+      println("closeTestConfirm: do some stuff");
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test and confirm")
@@ -225,8 +238,8 @@ object QTI21TestPage extends HttpHeaders {
    * @return The builder
    */
   def confirmCloseTestAndCloseResults: ChainBuilder = exec(session => {
-      val endTestPartButton = session("confirmClose").as[XHREvent]
-      val closeUrl = endTestPartButton.url();
+      val confirmCloseButton = session("confirmClose").as[XHREvent]
+      val closeUrl = confirmCloseButton.url()
       session.set("closeUrl", closeUrl)
     }).exec(
         http("Confirm close")
@@ -235,8 +248,8 @@ object QTI21TestPage extends HttpHeaders {
           .headers(headers_json)
           .check(status.is(200))
           .transformResponse(extractJsonResponse)
-          .check(css("""div#o_qti_run a.o_sel_close_results""","href")
-            .find
+          .check(css("""div#o_qti_container a.o_sel_close_results""","onclick")
+            .find(0)
             .transform(href => FFEvent(href))
             .saveAs("closeResults"))
     ).exec(session => {
@@ -244,8 +257,7 @@ object QTI21TestPage extends HttpHeaders {
       val parameters = collection.mutable.HashMap[String, String]()
       parameters.put("dispatchuri", closeResultsButton.elementId)
       parameters.put("dispatchevent", closeResultsButton.actionId)
-      val csrfToken = session("csrfToken").as[String]
-      parameters.put("_csrf", csrfToken)
+      parameters.put("_csrf", session("csrfToken").asOption[String].getOrElse(""))
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("Close results")
@@ -269,7 +281,7 @@ object QTI21TestPage extends HttpHeaders {
   def startItem: ChainBuilder = exec(session => {
       val itemPos = session("itemPos").as[Int]
       val itemList = session("qtiItems").as[immutable.Vector[FFXHREvent]]
-      val csrfToken = session("csrfToken").as[String]
+      val csrfToken = session("csrfToken").asOption[String].getOrElse("")
       if(itemPos < itemList.length) {
         val parameters = itemList(itemPos).formMap(csrfToken)
         session.set("itemParameters",parameters)
@@ -332,8 +344,7 @@ object QTI21TestPage extends HttpHeaders {
       val submitItem = session("submitItem").as[FFEvent]
       parameters.put("dispatchuri", submitItem.elementId)
       parameters.put("dispatchevent", submitItem.actionId)
-      val csrfToken = session("csrfToken").as[String]
-      parameters.put("_csrf", csrfToken)
+      parameters.put("_csrf", session("csrfToken").asOption[String].getOrElse(""))
       session.set("formParameters", parameters.toMap[String,String])
   }).exec(
       http("Post item:${itemPos}")
@@ -358,7 +369,7 @@ object QTI21TestPage extends HttpHeaders {
 
   def toSection : ChainBuilder = exec(session => {
     val toSectionButton = session("toSectionButton").as[FFXHREvent];
-    val csrfToken = session("csrfToken").as[String]
+    val csrfToken = session("csrfToken").asOption[String].getOrElse("")
     val parameters = toSectionButton.formMap(csrfToken);
     session.set("formParameters", parameters)
   }).exec(

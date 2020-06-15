@@ -46,9 +46,6 @@ trait HttpHeaders {
 		val bodyStream = response.body.stream
 		val jsonResponse = (new ObjectMapper()).readTree(bodyStream)
 		val cmds = jsonResponse.get("cmds");
-		//println("***********************************************************")
-		//println("Cmds: " + cmds.size())
-		//println(bodyString)
 		var redirect:String = null;
 		0 to cmds.size() - 1 foreach { i => {
 			val cmd = cmds.get(i)
@@ -68,8 +65,10 @@ trait HttpHeaders {
 				redirect = cmd.get("cda").get("rurl").asText();
 			}
 		}}
-		
 		extractedResponse.append("</body></html>")
+		//println("***********************************************************")
+		//println("Cmds: " + cmds.size())
+		//println(extractedResponse)
 		val htmlResponse = response.copy(body = new StringResponseBody(extractedResponse.toString(), UTF_8))
 		Success(htmlResponse)
 	}}

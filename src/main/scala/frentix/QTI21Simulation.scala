@@ -8,11 +8,11 @@ import io.gatling.http.Predef._
  */
 class QTI21Simulation extends Simulation {
 
-  val numOfUsers = Integer.getInteger("users", 100)
+  val numOfUsers = Integer.getInteger("users", 10)
   val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
-  val ramp = Integer.getInteger("ramp", 60)
-  val url = System.getProperty("url", "http://localhost:8081")
-  val jump = System.getProperty("jump", "/url/RepositoryEntry/35061760/CourseNode/92385798289062")
+  val ramp = Integer.getInteger("ramp", 10)
+  val url = System.getProperty("url", "https://kivik.frentix.com")
+  val jump = System.getProperty("jump", "/url/RepositoryEntry/1007091712/CourseNode/96184839926893")
   val thinks = Integer.getInteger("thinks", 5)
   val thinksToRendezVous = (thinks.toInt * 2)
 
@@ -23,14 +23,17 @@ class QTI21Simulation extends Simulation {
     .acceptLanguageHeader("de-de")
     .connectionHeader("keep-alive")
     .userAgentHeader("Mozilla/5.0")
+    .warmUp(url)
+    .inferHtmlResources()
+    .silentResources
 
   val qtiScn = scenario("Test QTI 2.1")
     .exec(LoginPage.loginScreen)
     .pause(1)
-    .feed(csv("oo_user_credentials.csv"))
+    .feed(csv("data/oo_user_credentials_small.csv"))
     .exec(LoginPage.restUrl(jump))
     .exec(QTI21TestPage.login)
-    //.rendezVous(numOfUsersToRendezVous)
+    .rendezVous(numOfUsersToRendezVous)
 		.pause(1, thinksToRendezVous)
     .exec(QTI21TestPage.startTest)
     .exec(QTI21TestPage.startWithItems).pause(1, thinks)

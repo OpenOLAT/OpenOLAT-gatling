@@ -58,7 +58,9 @@ class FFEvent(form:String, uri:String, element:String, eventField:String, action
     val parameters = collection.mutable.HashMap[String, String]()
     parameters.put("dispatchuri", elementId)
     parameters.put("dispatchevent", actionId)
-    parameters.put("_csrf", csrfToken)
+    if(csrfToken != null && csrfToken.length() > 0) {
+      parameters.put("_csrf", csrfToken)
+    }
     parameters.toMap[String,String]
   }
   

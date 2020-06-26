@@ -17,33 +17,23 @@
  * frentix GmbH, http://www.frentix.com
  * <p>
  */
-package frentix.event
+package org.openolat.gatling.setup;
 
 /**
- * Created by srosse on 29.09.15.
+ * 
+ * @author srosse on 25.06.2020
+ *
  */
-object XHREvent {
-
-  def apply(link:String): XHREvent = {
-    val cleanedLink = link.replace("o_XHREvent('", "").replace("'); return false;", "")
-    val splittedLink: Array[String] = cleanedLink.split(",")
-    new XHREvent(splittedLink(0).replace("'", ""), splittedLink(3).replace("'", ""), splittedLink(4).replace("'", ""))
-  }
-}
-
-class XHREvent(uri:String, cmd:String, cmdValue:String) {
-
-  private val _dispatchUri = uri
-  private val _cmd = cmd
-  private val _cmdValue = cmdValue
-
-  def dispatchUri = _dispatchUri
-  def command = _cmd
-  def commandValue = _cmdValue
-
-  def url():String = {
-    dispatchUri
-  }
+public class GenerateUserList {
+	
+	public static void main(String[] args) {
+		try {
+			for(int i=1; i<=2000; i++) {
+				System.out.println("zac_" + i);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
-

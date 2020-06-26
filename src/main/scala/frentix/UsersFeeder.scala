@@ -17,33 +17,21 @@
  * frentix GmbH, http://www.frentix.com
  * <p>
  */
-package frentix.event
+package frentix
+
+import scala.collection.mutable.ArrayBuffer 
 
 /**
- * Created by srosse on 29.09.15.
+ * Created by srosse on 25.06.2020
  */
-object XHREvent {
-
-  def apply(link:String): XHREvent = {
-    val cleanedLink = link.replace("o_XHREvent('", "").replace("'); return false;", "")
-    val splittedLink: Array[String] = cleanedLink.split(",")
-    new XHREvent(splittedLink(0).replace("'", ""), splittedLink(3).replace("'", ""), splittedLink(4).replace("'", ""))
+object UsersFeeder {
+  
+  def feeder(first:Int, maxUsers:Int): Array[Map[String, String]] = {
+    var feederBuffer = ArrayBuffer[Map[String, String]]() 
+    first to (first + maxUsers) foreach { i => {
+      feederBuffer += Map("username" -> ("zac_" + i.toString), "password" -> "openolat")
+      
+    }}
+    feederBuffer.toArray
   }
 }
-
-class XHREvent(uri:String, cmd:String, cmdValue:String) {
-
-  private val _dispatchUri = uri
-  private val _cmd = cmd
-  private val _cmdValue = cmdValue
-
-  def dispatchUri = _dispatchUri
-  def command = _cmd
-  def commandValue = _cmdValue
-
-  def url():String = {
-    dispatchUri
-  }
-
-}
-

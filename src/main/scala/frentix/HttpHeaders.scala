@@ -45,6 +45,7 @@ trait HttpHeaders {
 		extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
 		val bodyStream = response.body.stream
 		val jsonResponse = (new ObjectMapper()).readTree(bodyStream)
+		bodyStream.close()
 		val cmds = jsonResponse.get("cmds");
 		var redirect:String = null;
 		0 to cmds.size() - 1 foreach { i => {

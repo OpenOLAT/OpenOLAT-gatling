@@ -17,10 +17,13 @@
  * frentix GmbH, http://www.frentix.com
  * <p>
  */
-package frentix
+package frentix.exam
 
 import io.gatling.core.Predef._
+import io.gatling.core.structure._
 import io.gatling.http.Predef._
+
+import frentix._
 
 /**
  * Settings of the test course element:
@@ -29,15 +32,14 @@ import io.gatling.http.Predef._
  * - Overview results
  * - Disable option "LMS hidden"
  * 
- * Created by srosse on 09.12.14.
+ * Created by srosse on 25.06.2020
  */
-class QTI21Simulation extends Simulation {
+class MultiExamsSimulation extends Simulation {
 
   val numOfUsers = Integer.getInteger("users", 10)
   val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
   val ramp = Integer.getInteger("ramp", 10)
   val url = System.getProperty("url", "http://localhost:8081")
-  val jump = System.getProperty("jump", "/url/RepositoryEntry/1007091712/CourseNode/96184839926893")
   val thinks = Integer.getInteger("thinks", 5)
   val thinksToRendezVous = (thinks.toInt * 2)
 
@@ -51,12 +53,24 @@ class QTI21Simulation extends Simulation {
     .warmUp(url)
     .inferHtmlResources()
     .silentResources
-
-  val qtiScn = scenario("Test QTI 2.1")
+    
+  val qti1Scn = exam("Test Gatling SR", "/url/RepositoryEntry/950272/CourseNode/101941541272702", 1500, 500)
+  val qti2Scn = exam("Test Gatling SR2", "/url/RepositoryEntry/1769472/CourseNode/101941664272850", 1, 500)
+  val qti3Scn = exam("Test Gatling SR3", "/url/RepositoryEntry/1769474/CourseNode/101941664272902", 500, 500)
+  val qti4Scn = exam("Test Gatling SR4", "/url/RepositoryEntry/1769476/CourseNode/101941664272971", 1000, 1000)
+   
+  setUp(
+      qti1Scn.inject(rampUsers(numOfUsers) during (ramp seconds)),
+      qti2Scn.inject(rampUsers(numOfUsers) during (ramp seconds)),
+      qti3Scn.inject(rampUsers(numOfUsers) during (ramp seconds)),
+      qti4Scn.inject(rampUsers(numOfUsers) during (ramp seconds))
+  ).protocols(httpProtocol)
+  
+  def exam(scenarioName:String, jumpTo:String, firstUser:Int, maxUsers:Int) : ScenarioBuilder = scenario(scenarioName)
     .exec(LoginPage.loginScreen)
     .pause(1)
-    .feed(csv("data/oo_user_credentials_small.csv"))
-    .exec(LoginPage.restUrl(jump))
+    .feed(UsersFeeder.feeder(firstUser, maxUsers))
+    .exec(LoginPage.restUrl(jumpTo))
     .exec(QTI21TestPage.login)
     .rendezVous(numOfUsersToRendezVous)
 		.pause(1, thinksToRendezVous)
@@ -66,11 +80,12 @@ class QTI21Simulation extends Simulation {
     .repeat("${numOfItems}", "itemPos") {
       exec(QTI21TestPage.startItem, QTI21TestPage.postItem).pause(1, thinks)
     }
+    .rendezVous(numOfUsersToRendezVous)
+		.pause(1, thinksToRendezVous)
     .exec(QTI21TestPage.endTestPart).pause(1)
     .exec(QTI21TestPage.closeTestConfirm).pause(1)
     .exec(QTI21TestPage.confirmCloseTestAndCloseResults).pause(1)
     .exec(LoginPage.logout)
-
-
-  setUp(qtiScn.inject(rampUsers(numOfUsers) during (ramp seconds))).protocols(httpProtocol)
+    
+    
 }

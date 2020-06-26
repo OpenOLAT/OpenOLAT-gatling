@@ -111,7 +111,7 @@ public class SetupUsers {
 
 		Random rnd = new Random();
 		List<UserDef> users = new ArrayList<>(numOfUsers);
-		for(int i=1; i<numOfUsers; i++) {
+		for(int i=1; i<=numOfUsers; i++) {
 			String firstName = getRandomName(firstNames, rnd);
 			String lastName = getRandomName(lastNames, rnd);
 			users.add(new UserDef(prefix + "_" + i, prefix + "_" + i + "@mt2014.com", firstName, lastName, "openolat"));

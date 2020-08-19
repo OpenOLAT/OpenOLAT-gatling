@@ -48,7 +48,7 @@ class OOSimulation extends Simulation {
 	val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
 		.pause(thinks)
-		.feed(csv("data/oo_user_credentials_big.csv"))
+		.feed(UsersFeeder.feeder(1, numOfUsers))
 		.exec(LoginPage.loginToMyCourses)
 		//.repeat(5, "n") { exec(GroupPage.myGroupsAndSelectCourse(thinks)) }
 		.repeat(5, "n") {

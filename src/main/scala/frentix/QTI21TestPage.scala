@@ -136,6 +136,7 @@ object QTI21TestPage extends HttpHeaders {
    */
   def startWithItems: HttpRequestBuilder = http("Start test")
     .post("""${startUrl}""")
+    /*
     .resources(
       http("QtiWorksRendering.js").get("/raw/_noversion_/assessment/rendering/javascript/QtiWorksRendering.js"),
       http("AsciiMathInputController.js").get("/raw/_noversion_/assessment/rendering/javascript/AsciiMathInputController.js"),
@@ -149,7 +150,7 @@ object QTI21TestPage extends HttpHeaders {
       http("Qti.js").get("/raw/_noversion_/js/jquery/qti/jquery.qti.min.js"),
       http("Qti Timer.js").get("/raw/_noversion_/js/jquery/qti/jquery.qtiTimer.js"),
       http("Qti Autosave.js").get("/raw/_noversion_/js/jquery/qti/jquery.qtiAutosave.js")
-    )
+    )*/
     .formParam("cid","start")
     .headers(headers_json)
     .transformResponse(extractJsonResponse)

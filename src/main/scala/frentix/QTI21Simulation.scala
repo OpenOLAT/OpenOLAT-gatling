@@ -33,7 +33,7 @@ import io.gatling.http.Predef._
  */
 class QTI21Simulation extends Simulation {
 
-  val numOfUsers = Integer.getInteger("users", 10)
+  val numOfUsers = Integer.getInteger("users", 100)
   val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
   val ramp = Integer.getInteger("ramp", 10)
   val url = System.getProperty("url", "http://localhost:8081")
@@ -49,13 +49,13 @@ class QTI21Simulation extends Simulation {
     .connectionHeader("keep-alive")
     .userAgentHeader("Mozilla/5.0")
     .warmUp(url)
-    .inferHtmlResources()
+    //.inferHtmlResources()
     .silentResources
 
   val qtiScn = scenario("Test QTI 2.1")
     .exec(LoginPage.loginScreen)
     .pause(1)
-    .feed(csv("data/oo_user_credentials_small.csv"))
+    .feed(UsersFeeder.feeder(1, numOfUsers))
     .exec(LoginPage.restUrl(jump))
     .exec(QTI21TestPage.login)
     .rendezVous(numOfUsersToRendezVous)

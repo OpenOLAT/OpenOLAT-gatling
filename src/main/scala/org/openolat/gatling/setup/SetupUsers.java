@@ -49,7 +49,7 @@ public class SetupUsers {
 		CreateUser createUser = new CreateUser(pool, existingUsers);
 
 		//my users
-		myDefaultUsers().parallelStream().forEach(createUser);
+		//myDefaultUsers().parallelStream().forEach(createUser);
 		//some random users
 		createRandomUsers(prefix, numOfUsers).parallelStream().forEach(createUser);
 
@@ -59,13 +59,15 @@ public class SetupUsers {
 	public ConcurrentMap<String,UserVO> loadExistingUsers()
 			throws IOException, URISyntaxException, InterruptedException {
 		ConcurrentMap<String,UserVO> existingUsers = new ConcurrentHashMap<>();
-
+		
 		RestConnection connection = pool.borrow();
 		try {
 			UserUriBuilder userBuilder = new UserUriBuilder(connection);
 			List<UserVO> currentUsers = userBuilder.getUsers();
 			for(UserVO currentUser:currentUsers) {
-				existingUsers.put(currentUser.getLogin(), currentUser);
+				if(currentUser.getExternalId() != null) {
+					existingUsers.put(currentUser.getExternalId(), currentUser);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,22 +145,22 @@ public class SetupUsers {
 				UserUriBuilder userBuilder = new UserUriBuilder(connection);
 
 				UserVO user;
-				if(existingUserNames.containsKey(def.getName())) {
-					user = existingUserNames.get(def.getName());
+				if(existingUserNames.containsKey(def.getExternalId())) {
+					user = existingUserNames.get(def.getExternalId());
 				} else {
-					user = userBuilder.getUserByLogin(def.getName());
+					user = userBuilder.getUserByExternalId(def.getExternalId());
 					if(user != null) {
 						existingUserNames.put(user.getLogin(), user);
 					}
 				}
 				if(user != null) {
-					System.out.println("User already exists: " + def.getName());
+					System.out.println("User already exists: " + def.getExternalId());
 				} else {
-					user = userBuilder.createUser(def.getName(), def.getEmail(), def.getFirstName(), def.getLastName(), def.getPassword());
+					user = userBuilder.createUser(def.getName(), def.getExternalId(), def.getEmail(), def.getFirstName(), def.getLastName(), def.getPassword());
 					if(user == null) {
-						System.out.println("Return null user ." + def.getName());
+						System.out.println("Return null user " + def.getExternalId());
 					} else {
-						existingUserNames.put(user.getLogin(), user);
+						existingUserNames.put(user.getExternalId(), user);
 						File avatar = new File(SetupInstance.avatars, def.getName() + ".jpg");
 						if (avatar.exists()) {
 							userBuilder.uploadPortrait(user, avatar);
@@ -190,6 +192,10 @@ public class SetupUsers {
 		}
 
 		public String getName() {
+			return name;
+		}
+		
+		public String getExternalId() {
 			return name;
 		}
 

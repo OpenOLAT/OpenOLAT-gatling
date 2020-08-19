@@ -68,9 +68,9 @@ public class UserUriBuilder {
 		return null;
 	}
 
-	public UserVO getUserByLogin(String login)
+	public UserVO getUserByExternalId(String login)
 	throws URISyntaxException, IOException {
-		URI uri = getUsersUri().queryParam("login", login).build();
+		URI uri = getUsersUri().queryParam("externalId", login).build();
 		HttpGet method = connection.createGet(uri, MediaType.APPLICATION_JSON);
 
 		HttpResponse response = connection.execute(method);
@@ -123,10 +123,11 @@ public class UserUriBuilder {
 		return null;
 	}
 	
-	public UserVO createUser(String username, String email, String firstName, String lastName, String password)
+	public UserVO createUser(String username, String externalId, String email, String firstName, String lastName, String password)
 	throws IOException, URISyntaxException {
 		UserVO vo = new UserVO();
 		vo.setLogin(username);
+		vo.setExternalId(externalId);
 		vo.setFirstName(firstName);
 		vo.setLastName(lastName);
 		vo.setPassword(password);

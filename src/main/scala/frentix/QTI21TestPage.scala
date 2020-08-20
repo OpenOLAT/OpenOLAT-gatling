@@ -115,7 +115,8 @@ object QTI21TestPage extends HttpHeaders {
     .formParam("""o_fiooolat_login_name""", "${username}")
     .formParam("""o_fiooolat_login_pass""", "${password}")
     .check(status.is(200))
-    .check(css(".o_logout", "href").saveAs("logoutlink"))
+    .check(css(".o_logout", "href")
+      .saveAs("logoutlink"))
     .check(css("""form input[name=_csrf]""","value")
 			.find(0)
 			.optional

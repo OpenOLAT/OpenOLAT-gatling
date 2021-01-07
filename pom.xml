@@ -16,14 +16,13 @@
 	</licenses>
 
 	<properties>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<targetJdk>11</targetJdk>
 		<encoding>UTF-8</encoding>
-		<scala.tools.version>2.12</scala.tools.version>
-		<scala.version>2.12.10</scala.version>
-		<gatling.version>3.3.1</gatling.version>
-		<gatling.plugin.version>3.0.5</gatling.plugin.version>
-		<scala-maven-plugin.version>4.3.1</scala-maven-plugin.version>
+		<scala.tools.version>2.13</scala.tools.version>
+		<scala.version>2.13.3</scala.version>
+		<gatling.version>3.5.0</gatling.version>
+		<gatling.plugin.version>3.1.1</gatling.plugin.version>
+		<scala-maven-plugin.version>4.4.0</scala-maven-plugin.version>
 		<downloadSources>true</downloadSources>
 	</properties>
 
@@ -51,30 +50,35 @@
 		<dependency>
 			<groupId>org.scalatest</groupId>
 			<artifactId>scalatest_${scala.tools.version}</artifactId>
-			<version>3.0.4</version>
+			<version>3.2.3</version>
 			<scope>test</scope>
 		</dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.4.9</version>
+            <version>4.4.14</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.6</version>
+            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpmime</artifactId>
-            <version>4.5.6</version>
+            <version>4.5.13</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
             <version>1.1.1</version>
         </dependency>
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>2.3.3</version>
+		</dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-core</artifactId>
@@ -96,6 +100,17 @@
 			</testResource>
 		</testResources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>${targetJdk}</source>
+					<target>${targetJdk}</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<!-- see http://davidb.github.com/scala-maven-plugin -->
 				<groupId>net.alchim31.maven</groupId>
@@ -165,11 +180,9 @@
 								<jvmArg>-Xms1g</jvmArg>
 								<jvmArg>-XX:+UseG1GC</jvmArg>
 							</jvmArgs>
-							<overrideJvmArgs>false</overrideJvmArgs>     
-							<dataFolder>src/test/resources/data</dataFolder>
+							<overrideJvmArgs>false</overrideJvmArgs>
 							<resultsFolder>target/gatling/results</resultsFolder>
 							<simulationsFolder>src/test/scala</simulationsFolder>
-							<bodiesFolder>src/test/resources/request-bodies</bodiesFolder>
 						</configuration>
 					</execution>
 				</executions>

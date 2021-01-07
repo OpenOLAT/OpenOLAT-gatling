@@ -16,6 +16,7 @@
 	<!-- 	<logger name="com.excilys.ebi.gatling.http" level="TRACE" /> -->
 	<!-- Uncomment for logging ONLY FAILED HTTP request and responses -->
 	<!-- 	<logger name="com.excilys.ebi.gatling.http" level="DEBUG" /> -->
+	<logger name="jodd.lagarto.dom.LagartoDOMBuilderTagVisitor" level="OFF" />
 
 	<root level="WARN">
 		<appender-ref ref="CONSOLE" />

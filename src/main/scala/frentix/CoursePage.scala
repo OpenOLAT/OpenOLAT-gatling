@@ -39,11 +39,11 @@ object CoursePage extends HttpHeaders {
 							.optional
 						  .saveAs("nextElement"))
   
-	def selectCourseAndBack(pause:Int) = {
+	def selectCourseAndBack(pause:Int): ChainBuilder = {
 		exec(selectCourse()).pause(pause).exec(myCourses()).pause(pause)
 	}
 	
-	def selectCourseNavigateAndBack(pause:Int, pauseElement:Int) = {
+	def selectCourseNavigateAndBack(pause:Int, pauseElement:Int): ChainBuilder = {
 		exec(selectCourse()).pause(pause)
 		  .exec(asLongAs(session => session.contains("nextElement")) {
 			   exec(nextCourseElement()).pause(pauseElement)
@@ -51,7 +51,7 @@ object CoursePage extends HttpHeaders {
 		  .exec(myCourses()).pause(pause)
 	}
   
-	def selectCourse() = {
+	def selectCourse(): ChainBuilder = {
 		doIf(session => session.contains("currentCourse")) {
 			exec(
 				http("selectCourse:${n}")
@@ -69,7 +69,7 @@ object CoursePage extends HttpHeaders {
 		}
 	}
 	
-	def nextCourseElement() = {
+	def nextCourseElement(): ChainBuilder = {
 		doIf(session => session.contains("nextElement")) {
 			exec(session => {
 				val nextElementUrl = session("nextElement").as[XHREvent].url()

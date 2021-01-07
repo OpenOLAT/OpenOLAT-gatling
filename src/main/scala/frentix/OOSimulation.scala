@@ -30,13 +30,13 @@ import io.gatling.http.Predef._
  */
 class OOSimulation extends Simulation {
 
-	val numOfUsers = Integer.getInteger("users", 100)
-	val ramp = Integer.getInteger("ramp", 60)
-	val url = System.getProperty("url", "http://localhost:8081")
-	val thinks = Integer.getInteger("thinks", 5)
-	val rate = numOfUsers.toDouble / ramp;
+	private val numOfUsers = Integer.getInteger("users", 100)
+	private val ramp = Integer.getInteger("ramp", 60)
+	private val url = System.getProperty("url", "http://localhost:8081")
+	private val thinks = Integer.getInteger("thinks", 5)
+	private val rate = numOfUsers.toDouble / ramp
 
-	val httpProtocol = http
+	private val httpProtocol = http
 		.baseUrl(url)
 		.acceptHeader("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
 		.acceptEncodingHeader("gzip, deflate")
@@ -45,7 +45,7 @@ class OOSimulation extends Simulation {
 		.userAgentHeader("Mozilla/5.0")
 		//.inferHtmlResources()
 		
-	val uibkScn = scenario("UIBK like")
+	private val uibkScn = scenario("UIBK like")
 		.exec(LoginPage.loginScreen)
 		.pause(thinks)
 		.feed(UsersFeeder.feeder(1, numOfUsers))
@@ -60,7 +60,7 @@ class OOSimulation extends Simulation {
   	  
 
 	setUp(uibkScn.inject(
-	    constantUsersPerSec(rate.toDouble) during(ramp seconds)
+	    constantUsersPerSec(rate.toDouble) during ramp.seconds
 	    
 	)).protocols(httpProtocol)
 	

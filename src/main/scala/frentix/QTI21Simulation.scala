@@ -33,15 +33,15 @@ import io.gatling.http.Predef._
  */
 class QTI21Simulation extends Simulation {
 
-  val numOfUsers = Integer.getInteger("users", 100)
-  val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
-  val ramp = Integer.getInteger("ramp", 10)
-  val url = System.getProperty("url", "http://localhost:8081")
-  val jump = System.getProperty("jump", "/url/RepositoryEntry/1007091712/CourseNode/96184839926893")
-  val thinks = Integer.getInteger("thinks", 5)
-  val thinksToRendezVous = (thinks.toInt * 2)
+  private val numOfUsers = Integer.getInteger("users", 100)
+  private val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
+  private val ramp = Integer.getInteger("ramp", 10)
+  private val url = System.getProperty("url", "http://localhost:8081")
+  private val jump = System.getProperty("jump", "/url/RepositoryEntry/1007091712/CourseNode/96184839926893")
+  private val thinks = Integer.getInteger("thinks", 5)
+  private val thinksToRendezVous = thinks.toInt * 2
 
-  val httpProtocol = http
+  private val httpProtocol = http
     .baseUrl(url)
     .acceptHeader("text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .acceptEncodingHeader("gzip, deflate")
@@ -52,7 +52,7 @@ class QTI21Simulation extends Simulation {
     //.inferHtmlResources()
     .silentResources
 
-  val qtiScn = scenario("Test QTI 2.1")
+  private val qtiScn = scenario("Test QTI 2.1")
     .exec(LoginPage.loginScreen)
     .pause(1)
     .feed(UsersFeeder.feeder(1, numOfUsers))
@@ -72,5 +72,5 @@ class QTI21Simulation extends Simulation {
     .exec(LoginPage.logout)
 
 
-  setUp(qtiScn.inject(rampUsers(numOfUsers) during (ramp seconds))).protocols(httpProtocol)
+  setUp(qtiScn.inject(rampUsers(numOfUsers) during ramp.seconds)).protocols(httpProtocol)
 }

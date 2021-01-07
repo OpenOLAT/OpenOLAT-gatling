@@ -23,7 +23,7 @@ import scala.collection.immutable
 
 object FFEvent {
   def apply(link:String):FFEvent = {
-    var start = "o_ffEvent('";
+    var start = "o_ffEvent('"
     var startIndex = link.indexOf(start) + start.length()
     var endIndex = link.indexOf("')")
     var cleanedLink = link.substring(startIndex, endIndex)

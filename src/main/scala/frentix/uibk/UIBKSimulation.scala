@@ -51,7 +51,7 @@ class UIBKSimulation extends Simulation {
 		.pause(1)		
 		.feed(csv("oo_user_credentials.csv"))
 		.exec(LoginPage.loginToMyCourses)
-		.pause(100 milliseconds)
+		.pause(100.milliseconds)
 		.repeat(5, "n") {
 			exec(CoursePage.selectCourseAndBack(5))
 		}
@@ -60,16 +60,16 @@ class UIBKSimulation extends Simulation {
 
 
 	setUp(uibkScn.inject(
-		rampUsers(100) during (singleramptime seconds),
-		rampUsers(300) during (singleramptime seconds),
-		rampUsers(500) during (singleramptime seconds),
-		rampUsers(700) during (singleramptime seconds),
-		rampUsers(900) during (singleramptime seconds),
-		rampUsers(1100) during (singleramptime seconds),
-		rampUsers(1300) during (singleramptime seconds),
-		rampUsers(1500) during (singleramptime seconds),
-		rampUsers(1700) during (singleramptime seconds),
-		rampUsers(1900) during (singleramptime seconds)
+		rampUsers(100) during (singleramptime.seconds),
+		rampUsers(300) during (singleramptime.seconds),
+		rampUsers(500) during (singleramptime.seconds),
+		rampUsers(700) during (singleramptime.seconds),
+		rampUsers(900) during (singleramptime.seconds),
+		rampUsers(1100) during (singleramptime.seconds),
+		rampUsers(1300) during (singleramptime.seconds),
+		rampUsers(1500) during (singleramptime.seconds),
+		rampUsers(1700) during (singleramptime.seconds),
+		rampUsers(1900) during (singleramptime.seconds)
 	)).protocols(httpProtocol)
 		
 	

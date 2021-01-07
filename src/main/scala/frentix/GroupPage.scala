@@ -29,7 +29,7 @@ import scala.collection.immutable
 
 object GroupPage extends HttpHeaders {
 	
-	def myGroupsAndSelectCourse(pause:Int) = {
+	def myGroupsAndSelectCourse(pause:Int): ChainBuilder = {
 		exec(myGroups()).pause(pause).exec(selectGroup()).pause(pause)
 	}
   
@@ -76,7 +76,7 @@ object GroupPage extends HttpHeaders {
 			exec(session => {
 				val currentGroupLink = session("currentGroup").as[FFXHREvent]
 				val csrfToken = session("csrfToken").as[String]
-				val parameters = currentGroupLink.formMap(csrfToken);
+				val parameters = currentGroupLink.formMap(csrfToken)
 				session.set("formParameters", parameters)
 			})
 			.exec(

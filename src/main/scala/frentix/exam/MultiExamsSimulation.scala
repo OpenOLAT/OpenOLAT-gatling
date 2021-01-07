@@ -36,14 +36,14 @@ import frentix._
  */
 class MultiExamsSimulation extends Simulation {
 
-  val numOfUsers = Integer.getInteger("users", 10)
-  val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
-  val ramp = Integer.getInteger("ramp", 10)
-  val url = System.getProperty("url", "http://localhost:8081")
-  val thinks = Integer.getInteger("thinks", 5)
-  val thinksToRendezVous = (thinks.toInt * 2)
+  private val numOfUsers = Integer.getInteger("users", 10)
+  private val numOfUsersToRendezVous = (numOfUsers.doubleValue() * 0.7d).toInt
+  private val ramp = Integer.getInteger("ramp", 10)
+  private val url :String = System.getProperty("url", "http://localhost:8081")
+  private val thinks = Integer.getInteger("thinks", 5)
+  private val thinksToRendezVous = thinks.intValue() * 2
 
-  val httpProtocol = http
+  private val httpProtocol = http
     .baseUrl(url)
     .acceptHeader("text/html,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
     .acceptEncodingHeader("gzip, deflate")
@@ -54,16 +54,16 @@ class MultiExamsSimulation extends Simulation {
     .inferHtmlResources()
     .silentResources
     
-  val qti1Scn = exam("Test Gatling SR", "/url/RepositoryEntry/950272/CourseNode/101941541272702", 1500, 500)
-  val qti2Scn = exam("Test Gatling SR2", "/url/RepositoryEntry/1769472/CourseNode/101941664272850", 1, 500)
-  val qti3Scn = exam("Test Gatling SR3", "/url/RepositoryEntry/1769474/CourseNode/101941664272902", 500, 500)
-  val qti4Scn = exam("Test Gatling SR4", "/url/RepositoryEntry/1769476/CourseNode/101941664272971", 1000, 1000)
+  private val qti1Scn = exam("Test Gatling SR", "/url/RepositoryEntry/950272/CourseNode/101941541272702", 1500, 500)
+  private val qti2Scn = exam("Test Gatling SR2", "/url/RepositoryEntry/1769472/CourseNode/101941664272850", 1, 500)
+  private val qti3Scn = exam("Test Gatling SR3", "/url/RepositoryEntry/1769474/CourseNode/101941664272902", 500, 500)
+  private val qti4Scn = exam("Test Gatling SR4", "/url/RepositoryEntry/1769476/CourseNode/101941664272971", 1000, 1000)
    
   setUp(
-      qti1Scn.inject(rampUsers(numOfUsers) during (ramp seconds)),
-      qti2Scn.inject(rampUsers(numOfUsers) during (ramp seconds)),
-      qti3Scn.inject(rampUsers(numOfUsers) during (ramp seconds)),
-      qti4Scn.inject(rampUsers(numOfUsers) during (ramp seconds))
+      qti1Scn.inject(rampUsers(numOfUsers.intValue()) during ramp.seconds),
+      qti2Scn.inject(rampUsers(numOfUsers.intValue()) during ramp.seconds),
+      qti3Scn.inject(rampUsers(numOfUsers.intValue()) during ramp.seconds),
+      qti4Scn.inject(rampUsers(numOfUsers.intValue()) during ramp.seconds)
   ).protocols(httpProtocol)
   
   def exam(scenarioName:String, jumpTo:String, firstUser:Int, maxUsers:Int) : ScenarioBuilder = scenario(scenarioName)

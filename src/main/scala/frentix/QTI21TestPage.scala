@@ -19,20 +19,15 @@
  */
 package frentix
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.node.ArrayNode
 import frentix.event.{FFEvent, XHREvent, FFXHREvent}
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.{HttpRequestBuilder}
-import io.gatling.http.response._
+import io.gatling.http.request.builder.HttpRequestBuilder
 
-import scala.collection.mutable
 import scala.collection.immutable
 import scala.util.Random
 
-import java.nio.charset.StandardCharsets.UTF_8
 import io.gatling.http.check.HttpCheck
 
 
@@ -213,7 +208,7 @@ object QTI21TestPage extends HttpHeaders {
       parameters.put("dispatchuri", closeButton.elementId)
       parameters.put("dispatchevent", closeButton.actionId)
       parameters.put("_csrf", session("csrfToken").asOption[String].getOrElse(""))
-      println("closeTestConfirm: do some stuff");
+      println("closeTestConfirm: do some stuff")
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test and confirm")
@@ -237,7 +232,7 @@ object QTI21TestPage extends HttpHeaders {
   def confirmCloseTest: ChainBuilder = 
       exec(session => {
       val confirmCloseButton = session("confirmClose").as[XHREvent]
-      val closeUrl = confirmCloseButton.url();
+      val closeUrl = confirmCloseButton.url()
       session.set("closeUrl", closeUrl)
     }).exec(
       http("Confirm close")
@@ -389,9 +384,9 @@ object QTI21TestPage extends HttpHeaders {
     })
 
   def toSection : ChainBuilder = exec(session => {
-    val toSectionButton = session("toSectionButton").as[FFXHREvent];
+    val toSectionButton = session("toSectionButton").as[FFXHREvent]
     val csrfToken = session("csrfToken").asOption[String].getOrElse("")
-    val parameters = toSectionButton.formMap(csrfToken);
+    val parameters = toSectionButton.formMap(csrfToken)
     session.set("formParameters", parameters)
   }).exec(
     http("To section:${itemPos}")

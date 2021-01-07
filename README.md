@@ -1,37 +1,10 @@
-# OpenOLAT Gatling Test
+# OpenOlat Gatling Test
 
-
-## Setup the project with Eclipse
-
-This project is tested with Scala-IDE 4.7.0 and Scala 2.12.10
-
-To finish the set-up, add this in .project:
-
-```bash
-<buildSpec>
-	<buildCommand>
-		<name>org.scala-ide.sdt.core.scalabuilder</name>
-		<arguments>
-		</arguments>
-	</buildCommand>
-	<buildCommand>
-		<name>org.eclipse.m2e.core.maven2Builder</name>
-		<arguments>
-		</arguments>
-	</buildCommand>
-</buildSpec>
-<natures>
-	<nature>org.scala-ide.sdt.core.scalanature</nature>
-	<nature>org.eclipse.jdt.core.javanature</nature>
-	<nature>org.eclipse.m2e.core.maven2Nature</nature>
-</natures> 
-```
-	
-Then save and refresh your project Your project > Maven > Update Project...
+The tests are compatible with OpenOlat 15.3 and 15.4. They use Scala 2.13 and Java 11.
 
 ## Setup the project with IDEA
 
-I use the Plugin for Scala and Scala 2.12.10
+I use the Plugin for Scala and Maven.
 
 ## Before launching a test
 
@@ -166,7 +139,7 @@ The test is the UIBK like test as above:
 - With 6000 users: 371 queries/s, some errors due to courses with glossaries, avg. < 8.9s, 99% < 25.8s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 - With 8000 users: 384 queries/s, some errors due to courses with glossaries, avg. < 13.2s, 99% < 40.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 
-2020-05-03: Update to Gatling 3.3.1. This change have an implication on test results. As Gatling needs more than twice the CPU as earlier, the results of OpenOlat load test are lower. The results under are made with the exact same setup as the results above.
+2020-05-03: Update to Gatling 3.3.1. This change has an implication on test results. As Gatling needs more than twice the CPU as earlier, the results of OpenOlat load test are lower. The results under are made with the exact same setup as the results above.
 - With 4000 users: 240 queries/s, some errors due to courses with glossaries, avg. < 7.8s, 99% < 33.7s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 
 

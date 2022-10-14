@@ -77,7 +77,7 @@ class MultiExamsSimulation extends Simulation {
     .exec(QTI21TestPage.startTest)
     .exec(QTI21TestPage.startWithItems).pause(1, thinks)
     .exec(QTI21TestPage.postItem)
-    .repeat("${numOfItems}", "itemPos") {
+    .repeat("#{numOfItems}", "itemPos") {
       exec(QTI21TestPage.startItem, QTI21TestPage.postItem).pause(1, thinks)
     }
     .rendezVous(numOfUsersToRendezVous)

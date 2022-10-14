@@ -22,7 +22,6 @@ package frentix.uibk
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import scala.concurrent.duration._
-import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
 /**
  * This is the scenario used to reproduce the uibk lms

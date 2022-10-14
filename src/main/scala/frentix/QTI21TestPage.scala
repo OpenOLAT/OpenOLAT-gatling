@@ -107,8 +107,8 @@ object QTI21TestPage extends HttpHeaders {
     .headers(headers_post)
     .formParam("""dispatchuri""", """o_fiooolat_login_button""")
     .formParam("""dispatchevent""", """2""")
-    .formParam("""o_fiooolat_login_name""", "${username}")
-    .formParam("""o_fiooolat_login_pass""", "${password}")
+    .formParam("""o_fiooolat_login_name""", "#{username}")
+    .formParam("""o_fiooolat_login_pass""", "#{password}")
     .check(status.is(200))
     .check(css(".o_logout", "href")
       .saveAs("logoutlink"))
@@ -131,7 +131,7 @@ object QTI21TestPage extends HttpHeaders {
    * @return The request builder
    */
   def startWithItems: HttpRequestBuilder = http("Start test")
-    .post("""${startUrl}""")
+    .post("""#{startUrl}""")
     /*
     .resources(
       http("QtiWorksRendering.js").get("/raw/_noversion_/assessment/rendering/javascript/QtiWorksRendering.js"),
@@ -180,8 +180,8 @@ object QTI21TestPage extends HttpHeaders {
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test part")
-        .post("""${itemAction}""")
-        .formParamMap("""${formParameters}""")
+        .post("""#{itemAction}""")
+        .formParamMap("""#{formParameters}""")
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
@@ -208,12 +208,11 @@ object QTI21TestPage extends HttpHeaders {
       parameters.put("dispatchuri", closeButton.elementId)
       parameters.put("dispatchevent", closeButton.actionId)
       parameters.put("_csrf", session("csrfToken").asOption[String].getOrElse(""))
-      println("closeTestConfirm: do some stuff")
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("End test and confirm")
-        .post("""${itemAction}""")
-        .formParamMap("""${formParameters}""")
+        .post("""#{itemAction}""")
+        .formParamMap("""#{formParameters}""")
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
@@ -236,12 +235,12 @@ object QTI21TestPage extends HttpHeaders {
       session.set("closeUrl", closeUrl)
     }).exec(
       http("Confirm close")
-        .post("""${closeUrl}""")
+        .post("""#{closeUrl}""")
         .formParam("cid","link_0")
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
-        .check(css("""div.o_statusinfo""")
+        .check(css("""div.o_results""")
         		.find
         		.saveAs("statusInfo")
         )
@@ -259,7 +258,7 @@ object QTI21TestPage extends HttpHeaders {
       session.set("closeUrl", closeUrl)
     }).exec(
         http("Confirm close")
-          .post("""${closeUrl}""")
+          .post("""#{closeUrl}""")
           .formParam("cid","link_0")
           .headers(headers_json)
           .check(status.is(200))
@@ -277,12 +276,12 @@ object QTI21TestPage extends HttpHeaders {
       session.set("formParameters", parameters.toMap[String,String])
     }).exec(
       http("Close results")
-        .post("""${itemAction}""")
-        .formParamMap("""${formParameters}""")
+        .post("""#{itemAction}""")
+        .formParamMap("""#{formParameters}""")
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
-        .check(css("""div.o_statusinfo""")
+        .check(css("""div.o_course_iq div.o_personal""")
         		.find
         		.saveAs("statusInfo")
         )
@@ -306,9 +305,9 @@ object QTI21TestPage extends HttpHeaders {
       }
     }).doIf(session => session.contains("itemParameters")) {
       exec(
-        http("Select item:${itemPos}")
-          .post("""${itemAction}""")
-          .formParamMap("""${itemParameters}""")
+        http("Select item:#{itemPos}")
+          .post("""#{itemAction}""")
+          .formParamMap("""#{itemParameters}""")
           .headers(headers_json)
           .transformResponse(extractJsonResponse)
           .check(status.is(200))
@@ -333,7 +332,7 @@ object QTI21TestPage extends HttpHeaders {
       } else if(session.contains("multipleChoiceNames")) {
         val multipleChoiceNames = session("multipleChoiceNames").as[immutable.Vector[String]]
         val multipleChoiceValues = session("multipleChoiceValues").as[immutable.Vector[String]]
-        0 to multipleChoiceNames.length - 1 foreach { i =>
+        0 until multipleChoiceNames.length - 1 foreach { i =>
           if(Random.nextBoolean()) {
             parameters.put(multipleChoiceNames(i), multipleChoiceValues(i))
           }
@@ -363,10 +362,10 @@ object QTI21TestPage extends HttpHeaders {
       parameters.put("_csrf", session("csrfToken").asOption[String].getOrElse(""))
       session.set("formParameters", parameters.toMap[String,String])
   }).exec(
-      http("Post item:${itemPos}")
-        .post("""${itemAction}""")
-        .formParamMap("""${formParameters}""")
-        .formParam("""${formPresentedHidden}""", "1")
+      http("Post item:#{itemPos}")
+        .post("""#{itemAction}""")
+        .formParamMap("""#{formParameters}""")
+        .formParam("""#{formPresentedHidden}""", "1")
         .headers(headers_json)
         .check(status.is(200))
         .transformResponse(extractJsonResponse)
@@ -389,9 +388,9 @@ object QTI21TestPage extends HttpHeaders {
     val parameters = toSectionButton.formMap(csrfToken)
     session.set("formParameters", parameters)
   }).exec(
-    http("To section:${itemPos}")
-      .post("""${itemAction}""")
-      .formParamMap("""${formParameters}""")
+    http("To section:#{itemPos}")
+      .post("""#{itemAction}""")
+      .formParamMap("""#{formParameters}""")
       .headers(headers_json)
       .check(status.is(200))
       .transformResponse(extractJsonResponse)

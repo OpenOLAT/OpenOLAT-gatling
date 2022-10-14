@@ -19,12 +19,11 @@
  */
 package frentix.uibk
 
+import frentix.{CoursePage, LoginPage}
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+
 import scala.concurrent.duration._
-import frentix.CoursePage
-import frentix.LoginPage
-import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
 /**
  * This is the scenario used in the pre-launch phase of

@@ -54,7 +54,7 @@ object CoursePage extends HttpHeaders {
 	def selectCourse(): ChainBuilder = {
 		doIf(session => session.contains("currentCourse")) {
 			exec(
-				http("selectCourse:${n}")
+				http("selectCourse:#{n}")
 					.post(session => session("currentCourse").as[FFEvent].url())
 					.headers(headers_json)
 					.formParam("""dispatchuri""", session => session("currentCourse").as[FFEvent].elementId)
@@ -63,7 +63,7 @@ object CoursePage extends HttpHeaders {
 					.transformResponse(extractJsonResponse)
 					.check(status.is(200))
 					// details page, course, share folders
-					.check(css("""div.o_repo_details div.o_lead h1,div.o_course_run,div.o_briefcase"""))
+					.check(css("""div.o_repo_details div.o_lead h2,div.o_course_run,div.o_briefcase"""))
 					.check(nextCourseElementCheckList: _*)
 				)
 		}
@@ -76,8 +76,8 @@ object CoursePage extends HttpHeaders {
 				session.remove("nextElement").set("nextElementUrl", nextElementUrl)
 			})
 			.exec(
-				http("nextCourseElement:selectCourse:${n}")
-				  .post("""${nextElementUrl}""")
+				http("nextCourseElement:selectCourse:#{n}")
+				  .post("""#{nextElementUrl}""")
 				  .formParam("cid","nextelement")
 				  .formParam("""_csrf""", session => session("csrfToken").asOption[String].getOrElse(""))
 					.headers(headers_json)
@@ -99,8 +99,8 @@ object CoursePage extends HttpHeaders {
 				session.set("myCoursesUrl", myCoursesUrl)
 			})
 			.exec(
-				http("myCourses:${n}")
-					.post("""${myCoursesUrl}""")
+				http("myCourses:#{n}")
+					.post("""#{myCoursesUrl}""")
 					.formParam("cid","t")
 				  .formParam("""_csrf""", session => session("csrfToken").asOption[String].getOrElse(""))
 					.headers(headers_json)

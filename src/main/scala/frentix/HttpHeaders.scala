@@ -30,16 +30,16 @@ import io.gatling.commons.validation._
 import scala.collection.mutable
 
 trait HttpHeaders {
-  
-	val headers = Map("""Accept""" -> """*/*""")
 
-	val headers_json = Map("""Accept""" -> """application/json,text/html""")
+	val headers: Map[String, String] = Map("""Accept""" -> """*/*""")
 
-	val headers_post = Map(
+	val headers_json: Map[String, String] = Map("""Accept""" -> """application/json,text/html""")
+
+	val headers_post: Map[String, String] = Map(
 		"""Content-Type""" -> """application/x-www-form-urlencoded""",
 		"""Origin""" -> """http://localhost""")
 		
-	def extractJsonResponse: ResponseTransformer = { (session: Session, response: Response) => {
+	def extractJsonResponse: ResponseTransformer = { (response: Response, session: Session) => {
 
 	  val extractedResponse = new mutable.StringBuilder(32000)
 		extractedResponse.append("<!DOCTYPE html><html><head><title>Fragment</title></head><body>")
@@ -48,12 +48,12 @@ trait HttpHeaders {
 		bodyStream.close()
 		val cmds = jsonResponse.get("cmds")
 		var redirect:String = null
-		0 to cmds.size() - 1 foreach { i => {
+		0 until cmds.size() foreach { i => {
 			val cmd = cmds.get(i)
 			val cmdCode = cmd.get("cmd").asInt()
 			if(cmdCode == 2) {
 				val cps = cmd.get("cda").get("cps")
-				0 to cps.size() - 1 foreach { j => {
+				0 until cps.size() foreach { j => {
 					val cp = cps.get(j)
 					if (cp != null && cp.has("hfrag")) {
 						val htmlFragment = cp.get("hfrag").asText()

@@ -32,7 +32,7 @@ class OOSimulation extends Simulation {
 
 	private val numOfUsers = Integer.getInteger("users", 100)
 	private val ramp = Integer.getInteger("ramp", 60)
-	private val url = System.getProperty("url", "http://localhost:8081")
+	private val url = System.getProperty("url", "http://localhost:8080")
 	private val thinks = Integer.getInteger("thinks", 5)
 	private val rate = numOfUsers.toDouble / ramp
 

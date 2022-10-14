@@ -19,9 +19,9 @@
 		<targetJdk>11</targetJdk>
 		<encoding>UTF-8</encoding>
 		<scala.tools.version>2.13</scala.tools.version>
-		<scala.version>2.13.3</scala.version>
-		<gatling.version>3.5.0</gatling.version>
-		<gatling.plugin.version>3.1.1</gatling.plugin.version>
+		<scala.version>2.13.9</scala.version>
+		<gatling.version>3.8.4</gatling.version>
+		<gatling.plugin.version>4.2.7</gatling.plugin.version>
 		<scala-maven-plugin.version>4.4.0</scala-maven-plugin.version>
 		<downloadSources>true</downloadSources>
 	</properties>
@@ -179,6 +179,8 @@
 								<jvmArg>-Xmx4g</jvmArg>
 								<jvmArg>-Xms1g</jvmArg>
 								<jvmArg>-XX:+UseG1GC</jvmArg>
+								<jvmArg>-Djava.net.preferIPv4Stack=true</jvmArg>
+								<jvmArg>-Djava.net.preferIPv6Addresses=false</jvmArg>
 							</jvmArgs>
 							<overrideJvmArgs>false</overrideJvmArgs>
 							<resultsFolder>target/gatling/results</resultsFolder>

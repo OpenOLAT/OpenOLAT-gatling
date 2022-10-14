@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="Maven: org.scala-lang:scala-library:2.13.9" type="Scala">
+    <properties>
+      <language-level>Scala_2_13</language-level>
+      <compiler-classpath>
+        <root url="file://$MAVEN_REPOSITORY$/org/scala-lang/scala-compiler/2.13.9/scala-compiler-2.13.9.jar" />
+        <root url="file://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.13.9/scala-library-2.13.9.jar" />
+        <root url="file://$MAVEN_REPOSITORY$/org/scala-lang/scala-reflect/2.13.9/scala-reflect-2.13.9.jar" />
+        <root url="file://$MAVEN_REPOSITORY$/io/github/java-diff-utils/java-diff-utils/4.12/java-diff-utils-4.12.jar" />
+        <root url="file://$MAVEN_REPOSITORY$/org/jline/jline/3.21.0/jline-3.21.0.jar" />
+        <root url="file://$MAVEN_REPOSITORY$/net/java/dev/jna/jna/5.9.0/jna-5.9.0.jar" />
+      </compiler-classpath>
+    </properties>
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.13.9/scala-library-2.13.9.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.13.9/scala-library-2.13.9-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/scala-lang/scala-library/2.13.9/scala-library-2.13.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

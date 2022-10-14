@@ -36,7 +36,7 @@ class QTI21Simulation extends Simulation {
   private val numOfUsers = Integer.getInteger("users", 100)
   private val numOfUsersToRendezVous = (numOfUsers.toDouble * 0.7d).toInt
   private val ramp = Integer.getInteger("ramp", 10)
-  private val url = System.getProperty("url", "http://localhost:8081")
+  private val url = System.getProperty("url", "http://localhost:8080")
   private val jump = System.getProperty("jump", "/url/RepositoryEntry/1007091712/CourseNode/96184839926893")
   private val thinks = Integer.getInteger("thinks", 5)
   private val thinksToRendezVous = thinks.toInt * 2
@@ -63,7 +63,7 @@ class QTI21Simulation extends Simulation {
     .exec(QTI21TestPage.startTest)
     .exec(QTI21TestPage.startWithItems).pause(1, thinks)
     .exec(QTI21TestPage.postItem)
-    .repeat("${numOfItems}", "itemPos") {
+    .repeat("#{numOfItems}", "itemPos") {
       exec(QTI21TestPage.startItem, QTI21TestPage.postItem).pause(1, thinks)
     }
     .exec(QTI21TestPage.endTestPart).pause(1)

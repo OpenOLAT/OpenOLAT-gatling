@@ -23,7 +23,6 @@ import frentix.event.{FFXHREvent, XHREvent}
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ChainBuilder
 import io.gatling.http.Predef._
-import io.gatling.http.request.builder.HttpRequestBuilder.toActionBuilder
 
 import scala.collection.immutable
 
@@ -40,8 +39,8 @@ object GroupPage extends HttpHeaders {
   			session.set("myGroupsUrl", myGroupsUrl)
   		})
   		.exec(
-  		  http("mygroups:${n}")
-  			  .post("""${myGroupsUrl}""")
+  		  http("mygroups:#{n}")
+  			  .post("""#{myGroupsUrl}""")
   			  .headers(headers_json)
   			  .formParam("cid","t")
   			  .transformResponse(extractJsonResponse)
@@ -80,9 +79,9 @@ object GroupPage extends HttpHeaders {
 				session.set("formParameters", parameters)
 			})
 			.exec(
-				http("selectGroup:${n}")
-					.post("""${myGroupsAction}""")
-          .formParamMap("""${formParameters}""")
+				http("selectGroup:#{n}")
+					.post("""#{myGroupsAction}""")
+          .formParamMap("""#{formParameters}""")
 					.headers(headers_json)
 					.transformResponse(extractJsonResponse)
 					.check(status.is(200))

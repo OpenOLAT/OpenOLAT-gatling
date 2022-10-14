@@ -50,8 +50,8 @@ object LoginPage extends HttpHeaders {
 		.headers(headers_post)
 		.formParam("""dispatchuri""", """o_fiooolat_login_button""")
 		.formParam("""dispatchevent""", """2""")
-		.formParam("""o_fiooolat_login_name""", "${username}")
-		.formParam("""o_fiooolat_login_pass""", "${password}")
+		.formParam("""o_fiooolat_login_name""", "#{username}")
+		.formParam("""o_fiooolat_login_pass""", "#{password}")
 		.check(status.is(200))
 		.check(css(".o_logout", "href")
 		  .saveAs("logoutlink"))
@@ -96,7 +96,7 @@ object LoginPage extends HttpHeaders {
 	 * @return
 	 */
 	def logout: HttpRequestBuilder = http("Logout")
-		.get("${logoutlink}")
+		.get("#{logoutlink}")
 		.headers(headers)
 		.check(status.is(200))
 		.check(regex("""o_fiooolat_login_button"""))

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: net.debasishg:redisclient_2.13:3.42">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/debasishg/redisclient_2.13/3.42/redisclient_2.13-3.42.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/net/debasishg/redisclient_2.13/3.42/redisclient_2.13-3.42-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/net/debasishg/redisclient_2.13/3.42/redisclient_2.13-3.42-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

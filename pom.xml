@@ -20,8 +20,8 @@
 		<encoding>UTF-8</encoding>
 		<scala.tools.version>2.13</scala.tools.version>
 		<scala.version>2.13.9</scala.version>
-		<gatling.version>3.8.4</gatling.version>
-		<gatling.plugin.version>4.2.7</gatling.plugin.version>
+		<gatling.version>3.9.0</gatling.version>
+		<gatling.plugin.version>4.2.9</gatling.plugin.version>
 		<scala-maven-plugin.version>4.4.0</scala-maven-plugin.version>
 		<downloadSources>true</downloadSources>
 	</properties>
@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 

@@ -142,7 +142,25 @@ The test is the UIBK like test as above:
 2020-05-03: Update to Gatling 3.3.1. This change has an implication on test results. As Gatling needs more than twice the CPU as earlier, the results of OpenOlat load test are lower. The results under are made with the exact same setup as the results above.
 - With 4000 users: 240 queries/s, some errors due to courses with glossaries, avg. < 7.8s, 99% < 33.7s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
 
+2022: New hardware for testing MacBook Pro M1 (Apple M1 Max with 8 cores, 3.2 Ghz)
 
+2022-10-14: Configuration for OpenOlat 17.1.0, update to Gatling 3.8.4, chat, rating, comment, lectures, assessment modes, UIBK like...
+- With 1000 users: 110 queries/s, some errors due to courses with glossaries, avg. < 1.0s, 99% < 10.2s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 84 threads
+- With 1000 users: 117 queries/s, some errors due to courses with glossaries, avg. < 0.2s, 99% < 9.9s, ramp in 60s, thinks 5s (logout too), 196 db connections, IO
+- With 1500 users: 148 queries/s, some errors due to courses with glossaries, avg. < 3.0s, 99% < 17.6s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 2000 users: 172 queries/s, some errors due to courses with glossaries, avg. < 4.9s, 99% < 30.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 3000 users: 183 queries/s, some errors due to courses with glossaries, connection timeout (<350), avg. < 8.9s, 99% < 59.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 3000 users: 184 queries/s, some errors due to courses with glossaries, connection timeout (<370), avg. < 8.5s, 99% < 57.7s, ramp in 60s, thinks 5s (logout too), 196 db connections, IO
+
+2023-01-06: Configuration for OpenOlat 17.2.0, update to Gatling 3.9.0, chat, rating, comment, lectures, assessment modes, UIBK like...
+- With 1000 users: 124 queries/s, some errors due to courses with glossaries, avg. = 0.02s, 99% < 0.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 90 threads
+- With 1500 users: 185 queries/s, some errors due to courses with glossaries, avg. = 0.05s, 99% < 1.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 90 threads
+- With 2000 users: 217 queries/s, some errors due to courses with glossaries, avg. < 1.10s, 99% < 7.6s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 90 threads
+- With 3000 users: 265 queries/s, some errors due to courses with glossaries, avg. < 2.3s, 99% < 19.6s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 90 threads
+- With 4000 users: 340 queries/s, some errors due to courses with glossaries, avg. < 4.1s, 99% < 12.6s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 6000 users: 317 queries/s, some errors due to courses with glossaries, avg. < 11.8s, 99% < 40.8s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+OpenOlat crash with 8000 users due to a deadlock in the LegacyHiLoAlgorithmOptimizer (used to generate primary keys)
+- With 8000 users: 280 queries/s, some errors due to courses with glossaries, connection timeout (<5500), avg. < 18.9s, 99% < 60.0s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
 
 
 

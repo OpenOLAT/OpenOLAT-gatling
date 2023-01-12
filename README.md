@@ -157,8 +157,9 @@ The test is the UIBK like test as above:
 - With 1500 users: 185 queries/s, some errors due to courses with glossaries, avg. = 0.05s, 99% < 1.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 90 threads
 - With 2000 users: 217 queries/s, some errors due to courses with glossaries, avg. < 1.10s, 99% < 7.6s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 90 threads
 - With 3000 users: 265 queries/s, some errors due to courses with glossaries, avg. < 2.3s, 99% < 19.6s, ramp in 60s, thinks 5s (logout too), 96 db connections, NIO2 with 90 threads
-- With 4000 users: 340 queries/s, some errors due to courses with glossaries, avg. < 4.1s, 99% < 12.6s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
-- With 6000 users: 317 queries/s, some errors due to courses with glossaries, avg. < 11.8s, 99% < 40.8s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 3000 users: 321 queries/s, some errors due to courses with glossaries, avg. < 1.5s, 99% < 6.0s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 4000 users: 352 queries/s, some errors due to courses with glossaries, avg. < 3.8s, 99% < 11.0s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 6000 users: 375 queries/s, some errors due to courses with glossaries, avg. < 8.7s, 99% < 23.1s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
 OpenOlat crash with 8000 users due to a deadlock in the LegacyHiLoAlgorithmOptimizer (used to generate primary keys)
 - With 8000 users: 280 queries/s, some errors due to courses with glossaries, connection timeout (<5500), avg. < 18.9s, 99% < 60.0s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
 

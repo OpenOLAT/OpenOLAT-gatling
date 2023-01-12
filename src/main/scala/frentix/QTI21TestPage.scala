@@ -123,7 +123,9 @@ object QTI21TestPage extends HttpHeaders {
 
   def startTest: ChainBuilder = exec(session => {
     val startUrl = session("startTest").as[XHREvent]
-    session.set("startUrl", startUrl.url())
+    session
+      .set("startUrl", startUrl.url())
+      .set("itemPos", Integer.valueOf(0))
   })
 
   /**

@@ -17,8 +17,9 @@
  * frentix GmbH, https://www.frentix.com
  * <p>
  */
-import io.gatling.app.Gatling;
-import io.gatling.core.config.GatlingPropertiesBuilder;
+package org.olat.gatling.event;
+
+import java.util.List;
 
 /**
  * 
@@ -26,19 +27,24 @@ import io.gatling.core.config.GatlingPropertiesBuilder;
  * @author srosse, stephane.rosse@frentix.com, http://www.frentix.com
  *
  */
-public class Engine {
-
-	public static void main(String[] args) {
-		GatlingPropertiesBuilder props = new GatlingPropertiesBuilder()
-			.resourcesDirectory(IDEPathHelper.mavenResourcesDirectory.toString())
-			.resultsDirectory(IDEPathHelper.resultsDirectory.toString())
-			.binariesDirectory(IDEPathHelper.mavenBinariesDirectory.toString())
-			//.simulationClass("org.olat.gatling.OOSimulation")
-			.simulationClass("org.olat.gatling.QTI21Simulation")
-			//.simulationClass("org.olat.gatling.ExamSimulation")
-			//.simulationClass("org.olat.gatling.ExamsSimulation")
-		;
-
-		Gatling.fromMap(props.build());
+public class NameMultipleValues {
+	
+	private String name;
+	private List<Object> values;
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public List<Object> getValues() {
+		return values;
+	}
+	
+	public void setValues(List<Object> values) {
+		this.values = values;
 	}
 }

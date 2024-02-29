@@ -65,6 +65,7 @@ public class LoginPage extends HttpHeaders {
 			.formParam("dispatchuri", "o_fiooolat_login_button")
 			.formParam("dispatchevent", "2")
 			.formParam("o_fiooolat_login_pass", "#{password}")
+			.formParam("_csrf", HttpHeaders::csrfToken)
 			.check(css(".o_logout", "href")
 				.saveAs("logoutlink"))
 			//check my courses is loaded

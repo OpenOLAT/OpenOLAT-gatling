@@ -19,16 +19,23 @@
  */
 package org.olat.gatling.page;
 
-import static io.gatling.javaapi.core.CoreDsl.*;
-import static io.gatling.javaapi.http.HttpDsl.*;
+import static io.gatling.javaapi.core.CoreDsl.css;
+import static io.gatling.javaapi.core.CoreDsl.doIf;
+import static io.gatling.javaapi.core.CoreDsl.exec;
+import static io.gatling.javaapi.http.HttpDsl.http;
+import static io.gatling.javaapi.http.HttpDsl.status;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.olat.gatling.event.FFEvent;
 import org.olat.gatling.event.FFXHREvent;
+import org.olat.gatling.event.NameMultipleValues;
 import org.olat.gatling.event.XHREvent;
 
 import io.gatling.javaapi.core.ChainBuilder;
@@ -44,6 +51,7 @@ import io.gatling.javaapi.http.HttpRequestActionBuilder;
 public class QTI21TestPage extends HttpHeaders {
 	
 	private static final Random random = new Random();
+	private static final String PRESENTED = "qtiworks_presented_";
 	
 	public static final List<CheckBuilder> checkListAssessmentItemForm  = List.of(
 		css("div#itemBody input[type=\'hidden\'][name^=\'qtiworks_presented_\']", "name")
@@ -70,16 +78,35 @@ public class QTI21TestPage extends HttpHeaders {
 			.findAll()
 			.optional()
 			.saveAs("multipleChoiceValues"),
+		//KPrims
+		css("div#itemBody table.o_qti_item_kprim td.o_qti_item_kprim_input input[type=\'checkbox\']", "name")
+			.findAll()
+			.optional()
+			.saveAs("kprimNames"),
+		css("div#itemBody table.o_qti_item_kprim td.o_qti_item_kprim_input input[type=\'checkbox\']", "value")
+			.findAll()
+			.optional()
+			.saveAs("kprimValues"),
 		//fillin
 		css("div#itemBody span.textEntryInteraction input[type=\'text\']", "name")
 			.findAll()
 			.optional()
 			.saveAs("fillinNames"),
+		css("div#itemBody span.textEntryInteraction input[type=\'text\']", "class")
+			.findAll()
+			.optional()
+			.saveAs("fillinTypes"),	
 		//text
 		css("div#itemBody div.extendedTextInteraction textarea", "name")
 			.findAll()
 			.optional()
-			.saveAs("textNames")
+			.saveAs("textNames"),
+		//hotspot
+		css("div#itemBody div.hotspotInteraction map area", "data-qti-id")
+			.findAll()
+			.optional()
+			.saveAs("hotspotAreas")	
+			
 	);
 	
 	public static final List<CheckBuilder> menuCheckList = List.of(
@@ -199,50 +226,58 @@ public class QTI21TestPage extends HttpHeaders {
 	    );
 	
 	public static final ChainBuilder postItem = exec(session -> {
-			Map<String,String> parameters = new HashMap<>();
+			Map<String,Object> parameters = new HashMap<>();
+			String formPresentedHidden = session.getString("formPresentedHidden");
+			if(formPresentedHidden != null) {
+				parameters.put(formPresentedHidden, "1");
+			}
+			NameMultipleValues multivaluedParameters = new NameMultipleValues();
 			if(session.contains("singleChoiceNames")) {
 				List<String> singleChoiceNames = session.getList("singleChoiceNames");
 				List<String> singleChoiceValues = session.getList("singleChoiceValues");
 				int i = random.nextInt(singleChoiceNames.size());
 				parameters.put(singleChoiceNames.get(i), singleChoiceValues.get(i));
 			} else if(session.contains("multipleChoiceNames")) {
-				List<String> multipleChoiceNames = session.getList("multipleChoiceNames");
-				List<String> multipleChoiceValues = session.getList("multipleChoiceValues");
-				
-				for(int i=0; i<multipleChoiceNames.size(); i++) {
-					if(random.nextBoolean()) {
-						parameters.put(multipleChoiceNames.get(i), multipleChoiceValues.get(i));
-					}
-				}
+				List<String> names = session.getList("multipleChoiceNames");
+				List<String> values = session.getList("multipleChoiceValues");
+				transformMultipleChoices(multivaluedParameters, names, values);
 			} else if(session.contains("kprimNames")) {
 				List<String> names = session.getList("kprimNames");
-				names.forEach(name -> {
-					if(!parameters.containsKey(name)) {
-						String responseSuffix = random.nextBoolean() ? ":correct" : ":wrong";
-						String response = name.substring(name.lastIndexOf('§') + 1) + responseSuffix;
-						parameters.put(name, response);
-					}
-				});
+				List<String> values = session.getList("kprimValues");
+				transformKprimes(multivaluedParameters, names, values);
 			} else if(session.contains("fillinNames")) {
 				List<String> names = session.getList("fillinNames");
-				names.forEach(name -> {
-					parameters.put(name, randomWord());
-				});
+				List<String> types = session.getList("fillinTypes");
+				transformTextEntries(parameters, names, types);
 			} else if(session.contains("textNames")) {
 				List<String> names = session.getList("textNames");
 				parameters.put(names.get(0), randomText());
+			} else if(session.contains("hotspotAreas")) {
+				List<String> areas = session.getList("hotspotAreas");
+				transformHotspotEntries(parameters, formPresentedHidden, areas);
 			}
 			//submit
 			FFEvent submitItem = (FFEvent)session.get("submitItem");
 			parameters.put("dispatchuri", submitItem.element());
 			parameters.put("dispatchevent", submitItem.action());
 			parameters.put("_csrf", csrfToken(session));
-			return session.set("formParameters", Map.copyOf(parameters));
+
+			return session
+					.set("formParameterMulti", multivaluedParameters)
+					.set("formParameters", Map.copyOf(parameters));
 		}).exec(
 			http("Post item:#{itemPos}")
 				.post("#{itemAction}")
 				.formParamMap(session -> session.getMap("formParameters"))
-				.formParam("#{formPresentedHidden}", "1")
+				.multivaluedFormParam(session -> {
+					NameMultipleValues multiValues = (NameMultipleValues)session.get("formParameterMulti");
+					return multiValues == null || multiValues.getName() == null
+							? "ooo-empty-name-ooo" : multiValues.getName();	
+				}, session -> {
+					NameMultipleValues multiValues = (NameMultipleValues)session.get("formParameterMulti");
+					return multiValues == null || multiValues.getName() == null || multiValues.getValues() == null
+							? List.of() : multiValues.getValues();
+				})
 				.headers(headersJson)
 				.check(status().is(200))
 				.transformResponse(extractJsonResponse)
@@ -255,8 +290,65 @@ public class QTI21TestPage extends HttpHeaders {
 	    ).exec(session -> {
 	    	return session.removeAll("multipleChoiceNames", "multipleChoiceValues",
 	    			"singleChoiceNames", "singleChoiceValues",
-	    			"kprimNames", "kprimNames", "fillinNames", "textNames");
+	    			"kprimNames", "kprimValues",
+	    			"fillinNames", "fillinTypes",
+	    			"textNames");
 	    });
+
+	private static void transformHotspotEntries(Map<String,Object> parameters, String formPresented, List<String> areas) {
+		if(!formPresented.startsWith(PRESENTED)) return;
+		
+		String responseId = formPresented.substring(PRESENTED.length());
+		int index = random.nextInt(areas.size());
+		String response = areas.get(0);
+		if(index >= 0 && index < areas.size()) {
+			response = areas.get(index);
+		}
+		parameters.put("qtiworks_response_" + responseId, response);
+	}
+	
+	private static void transformTextEntries(Map<String,Object> parameters, List<String> names, List<String> types) {
+		if(names.isEmpty() || types.isEmpty()) return;
+		
+		int numOfEntries = names.size();
+		int numOfTypes = types.size();
+		for(int i=0; i<numOfEntries && i<numOfTypes; i++) {
+			String name = names.get(i);
+			String type = types.get(i);
+			if("text".equals(type)) {
+				parameters.put(name, randomWord());
+			} else if("numeric".equals(type)) {
+				int val = random.nextInt(42);
+				parameters.put(name, Integer.toString(val));
+			}
+		}
+	}
+	
+	private static void transformMultipleChoices(NameMultipleValues parameters, List<String> names, List<String> values) {
+		if(names.isEmpty() || values.isEmpty()) return;
+		parameters.setName(names.get(0));
+		parameters.setValues(List.copyOf(values));
+	}
+	
+	private static void transformKprimes(NameMultipleValues parameters, List<String> names, List<String> values) {
+		if(names.isEmpty() || values.isEmpty()) return;
+		
+		parameters.setName(names.get(0));
+		Set<String> neutralValues = new HashSet<>();
+		for(String value:values) {
+			int index = value.indexOf(' ');
+			if(index >= 0) {
+				String val = value.substring(0, index);
+				neutralValues.add(val);
+			}
+		}
+		List<Object> responses = new ArrayList<>();
+		for(String neutralValue:neutralValues) {
+			String responseSuffix = random.nextBoolean() ? "correct" : "wrong";
+			responses.add(neutralValue + " " + responseSuffix);
+		}
+		parameters.setValues(responses);	
+	}
 	
 	public static final ChainBuilder endTestPart = exec(session -> {
 			FFEvent endTestPartButton = (FFEvent)session.get("endTestPartButton");
@@ -331,7 +423,7 @@ public class QTI21TestPage extends HttpHeaders {
 	        .headers(headersJson)
 	        .check(status().is(200))
 	        .transformResponse(extractJsonResponse)
-	        .check(css("div.o_course_iq div.o_personal")
+	        .check(css("div.o_course_iq fieldset.o_start_info_box div.o_note")
 	        		.find()
 	        		.saveAs("statusInfo")
 	        )

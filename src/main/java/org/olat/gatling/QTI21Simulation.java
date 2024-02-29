@@ -79,7 +79,9 @@ public class QTI21Simulation extends Simulation {
 			.pause(1, thinks)
 	    .exec(QTI21TestPage.postItem)
 	    .repeat("#{numOfItems}", "itemPos").on(
-	        exec(QTI21TestPage.startItem, QTI21TestPage.postItem).pause(1, thinks)
+	        exec(QTI21TestPage.startItem)
+	        	.exec(QTI21TestPage.postItem)
+	        	.pause(1, thinks)
 		)
 	    .exec(QTI21TestPage.endTestPart).pause(1)
 	    .exec(QTI21TestPage.closeTestConfirm).pause(1)

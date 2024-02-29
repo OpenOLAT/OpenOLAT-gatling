@@ -1,10 +1,10 @@
 # OpenOlat Gatling Test
 
-The tests are compatible with OpenOlat 15.3 and 15.4. They use Scala 2.13 and Java 11.
+The tests are compatible with OpenOlat 19.0. They use Java 17.
 
-## Setup the project with IDEA
+## Setup the project with IDEA or Eclipse
 
-I use the Plugin for Scala and Maven.
+I use the Plugin for Maven.
 
 ## Before launching a test
 
@@ -38,29 +38,23 @@ output in the console as it can kill the performance.
 Compile the code with your preferred IDE or with the following command:
 
 ```bash
-$mvn compile
+mvn compile
 ```
 
 To test it out, simply execute the following command:
 
 ```bash
-$mvn gatling:test -Dgatling.simulationClass=frentix.OOSimulation
-```
-
-or simply:
-
-```bash
-$mvn gatling:execute
+mvn gatling:test -Dgatling.simulationClass=org.olat.gatling.OOSimulation
 ```
 
 With all options:
 
 ```bash
-$mvn gatling:test -Dusers=100 -Dramp=60 -Durl=http://localhost:8080 -Dgatling.simulationClass=frentix.OOSimulation
+mvn gatling:test -Dusers=100 -Dramp=60 -Durl=http://localhost:8080 -Dgatling.simulationClass=org.olat.gatling.OOSimulation
 ```
 
 ```bash
-$mvn gatling:test -Dusers=500 -Dthinks=10 -Dramp=60 -Durl=http://localhost:8081 -Dgatling.simulationClass=frentix.QTI21Simulation
+mvn gatling:test -Dusers=500 -Dthinks=10 -Dramp=60 -Durl=http://localhost:8081 -Dgatling.simulationClass=org.olat.gatling.QTI21Simulation
 ```
 
 Where users are the number of users, the ramp is in seconds and the url is... the url of OpenOLAT
@@ -163,5 +157,9 @@ The test is the UIBK like test as above:
 OpenOlat crash with 8000 users due to a deadlock in the LegacyHiLoAlgorithmOptimizer (used to generate primary keys)
 - With 8000 users: 280 queries/s, some errors due to courses with glossaries, connection timeout (<5500), avg. < 18.9s, 99% < 60.0s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
 
-
+2024-02-29: Configuration for OpenOlat 19.0 alpha, update to Gatling 3.10, chat, rating, comment, lectures, assessment modes, UIBK like...
+- With 1000 users: 120 queries/s, some errors due to courses with glossaries, avg. = 0.05s, 99% < 0.5s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 2000 users: 120 queries/s, some errors due to courses with glossaries, avg. = 1.43s, 99% < 6.4s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 4000 users: 290 queries/s, some errors due to courses with glossaries, avg. = 6.98s, 99% < 26s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+- With 6000 users: 276 queries/s, some errors due to glossaries and timeout,  avg. = 14.6s, 99% < 52s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
 

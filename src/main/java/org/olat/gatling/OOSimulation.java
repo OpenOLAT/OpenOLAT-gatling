@@ -40,9 +40,9 @@ import io.gatling.javaapi.http.*;
  */
 public class OOSimulation extends Simulation {
 	
-	private Integer numOfUsers = Integer.getInteger("users", 1);
-	private Integer ramp = Integer.getInteger("ramp", 6);
-	private String url = System.getProperty("url", "http://localhost:8081");
+	private Integer numOfUsers = Integer.getInteger("users", 100);
+	private Integer ramp = Integer.getInteger("ramp", 60);
+	private String url = System.getProperty("url", "http://localhost:8080");
 	private Integer thinks = Integer.getInteger("thinks", 5);
 	private double rate = numOfUsers.doubleValue() / ramp.doubleValue();
 	
@@ -53,7 +53,8 @@ public class OOSimulation extends Simulation {
 			.acceptEncodingHeader("gzip, deflate")
 			.acceptLanguageHeader("de-de")
 			.connectionHeader("keep-alive")
-			.userAgentHeader("Mozilla/5.0");
+			.userAgentHeader("Mozilla/5.0")
+			.warmUp(url);
 	
 	// Add the ScenarioBuilder:
 	ScenarioBuilder uibkScn = scenario("UIBK like")
@@ -64,9 +65,11 @@ public class OOSimulation extends Simulation {
 			.pause(1)
 			.exec(LoginPage.loginPasswordToMyCourses)
 			.repeat(5, "n").on(
-				exec(CoursePage.selectCourseNavigateAndBack(thinks, thinks))
-				//exec(CoursePage.selectCourseAndBack(thinks))
-			);
+				//exec(CoursePage.selectCourseNavigateAndBack(thinks, thinks))
+				exec(CoursePage.selectCourseAndBack(thinks))
+			)
+			.pause(thinks)
+			.exec(LoginPage.logout);
 
 	
 	{

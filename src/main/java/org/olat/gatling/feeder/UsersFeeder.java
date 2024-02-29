@@ -1,5 +1,5 @@
 /**
- * <a href="http://www.openolat.org">
+ * <a href="https://www.openolat.org">
  * OpenOLAT - Online Learning and Training</a><br>
  * <p>
  * Licensed under the Apache License, Version 2.0 (the "License"); <br>
@@ -14,31 +14,32 @@
  * limitations under the License.
  * <p>
  * Initial code contributed and copyrighted by<br>
- * frentix GmbH, http://www.frentix.com
+ * frentix GmbH, https://www.frentix.com
  * <p>
  */
-package frentix.event
+package org.olat.gatling.feeder;
 
-import org.junit.Assert._
-import org.junit._
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-@Test
-class FFEventTest {
-  
-    @Test
-    def testOK() = {
-      /*
-      var link = "javascript:o_ffEvent('ofo_8000008724','ofo_8000008724_dispatchuri','o_fi8000008781','ofo_8000008724_eventval','2')"
-      var ffEvent = FFEvent(link)
-
-      assertNotNull(ffEvent.url)
-      assertEquals("ofo_8000008724", ffEvent.formName)
-      assertEquals("ofo_8000008724_dispatchuri", ffEvent.dispatchUri)
-      assertEquals("o_fi8000008781", ffEvent.elementId)
-      assertEquals("ofo_8000008724_eventval", ffEvent.eventFieldId)
-      assertEquals("2", ffEvent.actionId)
-      */
-     
-    }
+/**
+ * Generate list of users zac_# with password "openolat"
+ * 
+ * 
+ * Initial date: 29 févr. 2024<br>
+ * @author srosse, stephane.rosse@frentix.com, http://www.frentix.com
+ *
+ */
+public class UsersFeeder {
+	
+	public static Iterator<Map<String,Object>> feeder(int first, int maxUsers) {
+		List<Map<String, Object>> users = new ArrayList<>(maxUsers + 1);
+		for(int i=first; i<=maxUsers; i++) {
+			users.add(Map.of("username", "zac_" + i, "password", "openolat"));
+		}
+		return users.iterator();
+	}
 
 }

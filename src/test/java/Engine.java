@@ -17,10 +17,11 @@
  * frentix GmbH, https://www.frentix.com
  * <p>
  */
+
 import io.gatling.app.Gatling;
-import io.gatling.core.config.GatlingPropertiesBuilder;
 
 /**
+ * Doesn't work with last version of Gatling.io
  * 
  * Initial date: 29 févr. 2024<br>
  * @author srosse, stephane.rosse@frentix.com, http://www.frentix.com
@@ -28,7 +29,9 @@ import io.gatling.core.config.GatlingPropertiesBuilder;
  */
 public class Engine {
 
+
 	public static void main(String[] args) {
+		/*
 		GatlingPropertiesBuilder props = new GatlingPropertiesBuilder()
 			.resourcesDirectory(IDEPathHelper.mavenResourcesDirectory.toString())
 			.resultsDirectory(IDEPathHelper.resultsDirectory.toString())
@@ -37,8 +40,7 @@ public class Engine {
 			.simulationClass("org.olat.gatling.QTI21Simulation")
 			//.simulationClass("org.olat.gatling.ExamSimulation")
 			//.simulationClass("org.olat.gatling.ExamsSimulation")
-		;
-
-		Gatling.fromMap(props.build());
+		;*/
+		Gatling.main(args);
 	}
 }

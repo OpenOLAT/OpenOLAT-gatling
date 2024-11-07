@@ -75,7 +75,7 @@ public class CoursePage extends HttpHeaders {
 						.transformResponse(extractJsonResponse)
 						.check(status().is(200))
 						// details page, course, share folders
-						.check(css("div.o_repo_details div.o_lead h2,div.o_course_run,div.o_briefcase"))
+						.check(css("div.o_repo_details div.o_lead h2,div.o_course_run,div.o_folder"))
 						.check(nextCourseElementCheckList)
 					)
 				);

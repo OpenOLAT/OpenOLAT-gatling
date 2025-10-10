@@ -17,9 +17,7 @@ history.resume.enabled=false
 registration.enableDisclaimer=false
 ```
 
-Disable the CSRF protection.
-
-Disable the debug settings:
+Disable the debug settings for maximum performance:
 
 ```
 olat.debug=false
@@ -162,4 +160,6 @@ OpenOlat crash with 8000 users due to a deadlock in the LegacyHiLoAlgorithmOptim
 - With 2000 users: 120 queries/s, some errors due to courses with glossaries, avg. = 1.43s, 99% < 6.4s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
 - With 4000 users: 290 queries/s, some errors due to courses with glossaries, avg. = 6.98s, 99% < 26s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
 - With 6000 users: 276 queries/s, some errors due to glossaries and timeout,  avg. = 14.6s, 99% < 52s, ramp in 60s, thinks 5s (logout too), 96 db connections, IO
+
+2025-10-10: Configuration for OpenOlat 20.1.8, update to Gatling 3.14.5, Argon2, chat, rating, comment, lectures, assessment modes, UIBK like...
 

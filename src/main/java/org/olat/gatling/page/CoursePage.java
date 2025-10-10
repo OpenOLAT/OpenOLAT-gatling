@@ -115,7 +115,7 @@ public class CoursePage extends HttpHeaders {
 						.check(status().is(200))
 						.transformResponse(extractJsonResponse)
 						.check(css("div.o_coursetable"))
-						.check(css("div.o_meta h4.o_title a","onclick")
+						.check(css("div.o_meta h3.o_title a","onclick")
 							.findAll()
 							.transform(list -> {
 								return list.stream().map(FFEvent::valueOf).toList();

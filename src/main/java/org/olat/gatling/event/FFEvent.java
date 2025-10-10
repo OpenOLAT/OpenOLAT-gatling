@@ -28,13 +28,24 @@ package org.olat.gatling.event;
 public record FFEvent(String onclick, String formName, String formId, String uri, String element, String eventField, String action) {
 	
 	private static final String start = "o_ffEvent(event,'";
+	private static final String startDirty = "o_ffEventDirtyCheck(event,'";
 	
 	public static final FFEvent valueOf(String onclick) {
 		if(onclick == null) {
 			return null;
 		}
-
-		int startIndex = onclick.indexOf(start) + start.length();
+		return valueWithPrefix(start, onclick);
+	}
+	
+	public static final FFEvent dirtyValueOf(String onclick) {
+		if(onclick == null) {
+			return null;
+		}
+		return valueWithPrefix(startDirty, onclick);
+	}
+	
+	private static final FFEvent valueWithPrefix(String prefix, String onclick) {
+		int startIndex = onclick.indexOf(prefix) + prefix.length();
 	    int endIndex = onclick.indexOf("')");
 	    String cleanedLink = onclick.substring(startIndex, endIndex);
 	    String[] splittedLink = cleanedLink.split(",");

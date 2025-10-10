@@ -120,9 +120,9 @@ public class QTI21TestPage extends HttpHeaders {
 		css("div#o_qti_menu li.o_assessmentitem a.o_sel_assessmentitem", "onclick")
 			.count()
 			.saveAs("numOfItems"),
-		css("a.o_sel_end_testpart", "href")
+		css("a.o_sel_end_testpart", "onclick")
 			.find()
-			.transform(FFEvent::valueOf)
+			.transform(FFEvent::dirtyValueOf)
 			.optional()
 			.saveAs("endTestPartButton")
 	);

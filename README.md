@@ -1,6 +1,6 @@
 # OpenOlat Gatling Test
 
-The tests are compatible with OpenOlat 19.0. They use Java 17.
+The tests are compatible with OpenOlat 20.2. They use Java 17.
 
 ## Setup the project with IDEA or Eclipse
 

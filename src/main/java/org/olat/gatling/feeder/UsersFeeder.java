@@ -41,5 +41,13 @@ public class UsersFeeder {
 		}
 		return users.iterator();
 	}
+	
+	public static Iterator<Map<String,Object>> feeder(int first, int maxUsers, String prefix, String creds) {
+		List<Map<String, Object>> users = new ArrayList<>(maxUsers + 1);
+		for(int i=first; i<=maxUsers; i++) {
+			users.add(Map.of("username", prefix + i, "password", creds));
+		}
+		return users.iterator();
+	}
 
 }

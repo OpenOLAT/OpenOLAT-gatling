@@ -43,6 +43,8 @@ public class OOSimulation extends Simulation {
 	private Integer numOfUsers = Integer.getInteger("users", 100);
 	private Integer ramp = Integer.getInteger("ramp", 60);
 	private String url = System.getProperty("url", "http://localhost:8080");
+	private String prefix = System.getProperty("prefix", "zac_");
+	private String credential = System.getProperty("credential", "openolat");
 	private Integer thinks = Integer.getInteger("thinks", 5);
 	private double rate = numOfUsers.doubleValue() / ramp.doubleValue();
 	
@@ -60,7 +62,7 @@ public class OOSimulation extends Simulation {
 	ScenarioBuilder uibkScn = scenario("UIBK like")
 			.exec(LoginPage.loginScreen)
 			.pause(thinks)
-			.feed(UsersFeeder.feeder(1, numOfUsers))
+			.feed(UsersFeeder.feeder(1, numOfUsers, prefix, credential))
 			.exec(LoginPage.loginUsername)
 			.pause(1)
 			.exec(LoginPage.loginPasswordToMyCourses)

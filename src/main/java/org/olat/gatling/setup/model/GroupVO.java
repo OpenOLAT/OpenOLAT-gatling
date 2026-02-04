@@ -1,0 +1,137 @@
+/**
+ * <a href="http://www.openolat.org">
+ * OpenOLAT - Online Learning and Training</a><br>
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); <br>
+ * you may not use this file except in compliance with the License.<br>
+ * You may obtain a copy of the License at the
+ * <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache homepage</a>
+ * <p>
+ * Unless required by applicable law or agreed to in writing,<br>
+ * software distributed under the License is distributed on an "AS IS" BASIS, <br>
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <br>
+ * See the License for the specific language governing permissions and <br>
+ * limitations under the License.
+ * <p>
+ * Initial code contributed and copyrighted by<br>
+ * frentix GmbH, http://www.frentix.com
+ * <p>
+ */
+package org.olat.gatling.setup.model;
+
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
+/**
+ * 
+ * 
+ * <P>
+ * Initial Date:  7 apr. 2010 <br>
+ * @author srosse, stephane.rosse@frentix.com
+ */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "groupVO")
+public class GroupVO {
+	private Long key;
+	private String description;
+	private String externalId;
+	private String managedFlags;
+	private String name;
+	private String type;
+	private Integer minParticipants;
+	private Integer maxParticipants;
+
+	public GroupVO() {
+		//make jaxb happy
+	}
+	
+	public Long getKey() {
+		return key;
+	}
+
+	public void setKey(Long key) {
+		this.key = key;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public Integer getMinParticipants() {
+		return minParticipants;
+	}
+	
+	public void setMinParticipants(Integer minParticipants) {
+		this.minParticipants = minParticipants;
+	}
+	
+	public Integer getMaxParticipants() {
+		return maxParticipants;
+	}
+	
+	public void setMaxParticipants(Integer maxParticipants) {
+		this.maxParticipants = maxParticipants;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	public String getManagedFlags() {
+		return managedFlags;
+	}
+
+	public void setManagedFlags(String managedFlags) {
+		this.managedFlags = managedFlags;
+	}
+
+	@Override
+	public int hashCode() {
+		return key == null ? 387658 : key.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if(obj instanceof GroupVO) {
+			GroupVO vo = (GroupVO)obj;
+			return key != null && key.equals(vo.key);
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("GroupVO[key=").append(key == null ? "NULL" : key.toString())
+		  .append(";name=").append(name == null ? "NULL" : name);
+		return sb.toString();
+	}
+}

@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.SecureRandom;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.olat.gatling.setup.client.CoursesWSClient;
 import org.olat.gatling.setup.client.RestConnection;
 import org.olat.gatling.setup.client.UsersWSClient;
 import org.olat.gatling.setup.model.CourseVO;
+import org.olat.gatling.setup.model.ErrorVO;
 import org.olat.gatling.setup.model.RepositoryEntryStatusEnum;
 import org.olat.gatling.setup.model.RepositoryEntryVO;
 import org.olat.gatling.setup.model.UserVO;
@@ -77,7 +79,11 @@ public class SetupInstance {
 			//SetupCourses.class.getResource("/data/Test_8_Group_enrollment.zip"),
 			new Template("TMPL-Folder-v1", SetupInstance.class.getResource("/data/Test_9_Folder.zip")),
 			new Template("TMPL-Notifications-v1", SetupInstance.class.getResource("/data/Test_10_Notifications.zip")),
-			new Template("TMPL-Checkslist-v1", SetupInstance.class.getResource("/data/Test_11_Checklist.zip"))
+			new Template("TMPL-Checkslist-v1", SetupInstance.class.getResource("/data/Test_11_Checklist.zip")),
+			new Template("TMPL-Content-page-v1", SetupInstance.class.getResource("/data/Test_12_Content_Editor_Formel_Latex.zip")),
+			new Template("TMPL-Calendar-v2", SetupInstance.class.getResource("/data/Test_13_Calendar.zip")),
+			new Template("TMPL-Content-page-v3", SetupInstance.class.getResource("/data/Test_14_Content_text.zip")),
+			new Template("TMPL-Topic-broker-v1", SetupInstance.class.getResource("/data/Test_15_Topic_broker.zip"))
 		);
 
 	
@@ -200,7 +206,13 @@ public class SetupInstance {
 			for(Template template:COURSE_TEMPLATES) {
 				List<RepositoryEntryVO> entries = coursesBean.getRepositoryEntryByExternalId(template.externalId());
 				if(entries.isEmpty()) {
-					coursesBean.uploadCourse(template.externalId(), template.externalId(), template.externalId(), template.url());
+					CourseVO course = coursesBean.uploadCourse(template.externalId(), template.externalId(), template.externalId(), template.url());
+					if(course != null) {
+						RepositoryEntryVO entry = coursesBean.getRepositoryEntry(course.getRepoEntryKey());
+						if(entry != null) {
+							templates.add(entry);
+						}
+					}
 				} else {
 					templates.addAll(entries);
 				}
@@ -249,11 +261,23 @@ public class SetupInstance {
 		user.setLastName(lastName);
 		user.setLogin(externalId.toLowerCase());
 		user.setPassword(REF);
-		return usersBean.createUser(user, new ArrayList<>());
+		
+		List<ErrorVO> errors = new ArrayList<>();
+		UserVO newUser = usersBean.createUser(user, errors);
+		if(!errors.isEmpty()) {
+			for(ErrorVO error:errors) {
+				log.error("Cannot create user with externalId {}: {}", externalId, error.getTranslation());
+			}
+		}
+		return newUser;
 	}
 	
 	private String email(String externalId, String firstName, String lastName) {
-		return (firstName + "." + lastName + "." + externalId + "@mt2014.com").toLowerCase();
+		String email = (firstName + "." + lastName + "." + externalId + "@mt2014.com");
+		String emailNormalized = Normalizer.normalize(email, Normalizer.Form.NFKD)
+				.replaceAll("\\p{InCombiningDiacriticalMarks}+","")
+				.replace(" ", "");
+		return emailNormalized.toLowerCase();
 	}
 	
 	private NameDefs loadNames() {

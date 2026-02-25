@@ -46,6 +46,8 @@ public class QTI21Simulation extends Simulation {
 	private int numOfUsersToRendezVous = Math.round(numOfUsers.intValue() * 0.7f);
 	private Integer ramp = Integer.getInteger("ramp", 60);
 	private String url = System.getProperty("url", "http://localhost:8080");
+	private String prefix = System.getProperty("prefix", "zac_");
+	private String credential = System.getProperty("credential", "openolat");
 	private String jump = System.getProperty("jump", "/url/RepositoryEntry/1007091712/CourseNode/96184839926893");
 	private Integer thinks = Integer.getInteger("thinks", 5);
 	private int thinksToRendezVous = thinks * 2;
@@ -67,7 +69,7 @@ public class QTI21Simulation extends Simulation {
 	ScenarioBuilder qtiScn = scenario("Test QTI 2.1")
 		.exec(LoginPage.loginScreen)
 		.pause(thinks)
-		.feed(UsersFeeder.feeder(1, numOfUsers))
+		.feed(UsersFeeder.feeder(1, numOfUsers, prefix, credential))
 		.exec(LoginPage.restUrl(jump))
 		.exec(LoginPage.loginUsername)
 		.pause(1)
